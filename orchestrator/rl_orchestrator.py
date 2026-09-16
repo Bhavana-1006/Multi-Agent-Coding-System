@@ -59,11 +59,11 @@ class MultiAgentCodingEnv(gym.Env):
             }
         ]
         
-        # 12-dimensional observation vector describing project state
+        # 15-dimensional observation vector describing project state
         self.observation_space = spaces.Box(
             low=0.0,
             high=1.0,
-            shape=(12,),
+            shape=(15,),
             dtype=np.float32
         )
         
@@ -112,7 +112,11 @@ class MultiAgentCodingEnv(gym.Env):
             return mask
 
         if tests_failed:
-            # Tests failed. Re-testing the exact same failing code is FORBIDDEN.
+            # If max repair attempts reached, allow termination to prevent infinite loops
+            if s.repair_attempt_count >= 3:
+                mask[7] = True
+                return mask
+            # Re-testing the exact same failing code is FORBIDDEN.
             # Must perform Error Analysis -> Self Repair.
             if not has_error_diag:
                 mask[5] = True  # Error Analysis
@@ -157,9 +161,13 @@ class MultiAgentCodingEnv(gym.Env):
             
         self.current_state = ProjectState(
             raw_requirement=prob["requirement"],
-            test_code=prob.get("test_code", ""),
-            max_steps=self.max_steps
+            test_code=prob.get("test_code") or prob.get("test") or "",
+            max_steps=self.max_steps,
+            difficulty=prob.get("difficulty", "Medium")
         )
+        
+        self._sim_bug_present = False
+        self._sim_is_syntax_error = False
         
         if self.simulated:
             self.current_state.structured_requirement = RequirementSpec(
@@ -193,19 +201,66 @@ class MultiAgentCodingEnv(gym.Env):
         elif action == 2:  # Coding
             s.code = "def solution(): return True"
             s.test_result = None
+            
+            # Base defect rate conditioned on difficulty
+            diff = (s.difficulty or "medium").lower()
+            if diff == "easy":
+                base_defect_rate = 0.35
+            elif diff == "hard":
+                base_defect_rate = 0.65
+            else:
+                base_defect_rate = 0.50
+                
+            # Planning and Retrieval reduce defect likelihood
+            if s.plan and len(s.plan) > 0:
+                base_defect_rate -= 0.15
+            if s.retrieved_context and len(s.retrieved_context) > 0:
+                base_defect_rate -= 0.10
+                
+            base_defect_rate = max(0.10, min(0.85, base_defect_rate))
+            self._sim_bug_present = bool(np.random.rand() < base_defect_rate)
+            self._sim_is_syntax_error = bool(self._sim_bug_present and np.random.rand() < 0.20)
+            
         elif action == 3:  # Review
             s.review_feedback = ReviewResult(quality_score=0.95, passed_review=True)
         elif action == 4:  # Testing
             if s.code:
-                s.test_result = TestExecutionResult(passed=True, total_tests=5, passed_tests=5, failed_tests=0)
+                if getattr(self, "_sim_bug_present", False):
+                    if getattr(self, "_sim_is_syntax_error", False):
+                        s.test_result = TestExecutionResult(
+                            passed=False,
+                            total_tests=1,
+                            passed_tests=0,
+                            failed_tests=1,
+                            stderr="SyntaxError: invalid syntax on line 12",
+                            error_type="SyntaxError"
+                        )
+                    else:
+                        s.test_result = TestExecutionResult(
+                            passed=False,
+                            total_tests=5,
+                            passed_tests=3,
+                            failed_tests=2,
+                            stderr="AssertionError: Condition evaluated to False on boundary case",
+                            error_type="AssertionError"
+                        )
+                else:
+                    s.test_result = TestExecutionResult(passed=True, total_tests=5, passed_tests=5, failed_tests=0)
             else:
                 s.test_result = TestExecutionResult(passed=False, total_tests=1, failed_tests=1, error_type="MissingCode")
         elif action == 5:  # Error Analysis
-            s.error_analysis = "Diagnosed root cause: variable edge case mismatch."
+            err_type = "SyntaxError" if getattr(self, "_sim_is_syntax_error", False) else "AssertionError"
+            s.error_analysis = f"Diagnosed root cause: {err_type} in boundary handling logic."
         elif action == 6:  # Self Repair
             s.code = "def solution_repaired(): return True"
             s.test_result = None
             s.error_analysis = None
+            s.repair_attempt_count += 1
+            
+            # Self Repair successfully resolves defects 85% of the time (95% for syntax errors)
+            success_rate = 0.95 if getattr(self, "_sim_is_syntax_error", False) else 0.85
+            self._sim_bug_present = bool(np.random.rand() > success_rate)
+            self._sim_is_syntax_error = False
             
         return s
 
@@ -233,10 +288,13 @@ class MultiAgentCodingEnv(gym.Env):
             
             if tests_passed:
                 reward += 10.0  # Big reward for verified passing solution
+                # Bonus for efficient 1-shot pass (no repairs needed)
+                if s.repair_attempt_count == 0:
+                    reward += 3.0
                 if s.review_feedback:
                     reward += 2.0 * s.review_feedback.quality_score
             else:
-                reward -= 10.0  # Heavy penalty for submitting without verified passing tests
+                reward -= 15.0  # Strong negative penalty for submitting without passing tests
                 
             obs = s.to_feature_vector()
             info = {
@@ -272,7 +330,10 @@ class MultiAgentCodingEnv(gym.Env):
             else: reward += 2.0
         elif action == 6:  # Self Repair
             if not tests_failed: reward -= 5.0
-            else: reward += 2.5
+            else:
+                reward += 2.5
+                if s.repair_attempt_count > 2:
+                    reward -= 2.0  # Penalize repetitive repair thrashing
 
         # Execute agent (Simulated or Live)
         if self.simulated:
@@ -284,9 +345,12 @@ class MultiAgentCodingEnv(gym.Env):
         # Post-action test execution reward adjustments
         if action == 4:
             if self.current_state.test_result and self.current_state.test_result.passed:
-                reward += 4.0
+                if self.current_state.repair_attempt_count > 0:
+                    reward += 5.0  # Big reward for successfully repairing and passing tests!
+                else:
+                    reward += 4.0
             elif self.current_state.test_result and not self.current_state.test_result.passed:
-                reward -= 1.0
+                reward -= 1.5
 
         # Check step count timeout
         if self.current_state.step_count >= self.max_steps:

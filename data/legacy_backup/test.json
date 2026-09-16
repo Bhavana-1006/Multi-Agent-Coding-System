@@ -1,0 +1,145 @@
+[
+  {
+    "id": "PROB_019",
+    "name": "climb_stairs",
+    "category": "Dynamic Programming",
+    "difficulty": "Easy",
+    "requirement": "Write a python function `climb_stairs(n: int) -> int` that returns the number of distinct ways to climb to the top of a staircase with n steps, taking either 1 or 2 steps at each stride.",
+    "function_name": "climb_stairs",
+    "constraints": "1 <= n <= 45.",
+    "edge_cases": [
+      "n = 1 returns 1",
+      "n = 2 returns 2",
+      "n = 3 returns 3"
+    ],
+    "test_cases": [
+      {
+        "input": "1",
+        "expected_output": 1,
+        "type": "edge_case"
+      },
+      {
+        "input": "2",
+        "expected_output": 2,
+        "type": "normal"
+      },
+      {
+        "input": "3",
+        "expected_output": 3,
+        "type": "normal"
+      },
+      {
+        "input": "5",
+        "expected_output": 8,
+        "type": "normal"
+      },
+      {
+        "input": "10",
+        "expected_output": 89,
+        "type": "normal"
+      }
+    ],
+    "test_code": "assert climb_stairs(1) == 1\nassert climb_stairs(2) == 2\nassert climb_stairs(3) == 3\nassert climb_stairs(5) == 8\nassert climb_stairs(10) == 89"
+  },
+  {
+    "id": "PROB_018",
+    "name": "daily_temperatures",
+    "category": "Data Structures",
+    "difficulty": "Medium",
+    "requirement": "Write a python function `daily_temperatures(temperatures: list[int]) -> list[int]` that returns an array answer such that answer[i] is the number of days you have to wait after the i-th day to get a warmer temperature. If there is no future day with a warmer temperature, answer[i] == 0.",
+    "function_name": "daily_temperatures",
+    "constraints": "1 <= len(temperatures) <= 10^5. 30 <= temperatures[i] <= 100.",
+    "edge_cases": [
+      "Strictly decreasing temperatures return all zeroes",
+      "Strictly increasing temperatures return all ones except last",
+      "Single day returns [0]"
+    ],
+    "test_cases": [
+      {
+        "input": "[73, 74, 75, 71, 69, 72, 76, 73]",
+        "expected_output": [
+          1,
+          1,
+          4,
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "type": "normal"
+      },
+      {
+        "input": "[30, 40, 50, 60]",
+        "expected_output": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "type": "normal"
+      },
+      {
+        "input": "[30, 60, 90]",
+        "expected_output": [
+          1,
+          1,
+          0
+        ],
+        "type": "normal"
+      },
+      {
+        "input": "[90, 80, 70]",
+        "expected_output": [
+          0,
+          0,
+          0
+        ],
+        "type": "edge_case"
+      }
+    ],
+    "test_code": "assert daily_temperatures([73, 74, 75, 71, 69, 72, 76, 73]) == [1, 1, 4, 2, 1, 1, 0, 0]\nassert daily_temperatures([30, 40, 50, 60]) == [1, 1, 1, 0]\nassert daily_temperatures([30, 60, 90]) == [1, 1, 0]\nassert daily_temperatures([90, 80, 70]) == [0, 0, 0]"
+  },
+  {
+    "id": "PROB_020",
+    "name": "coin_change",
+    "category": "Dynamic Programming",
+    "difficulty": "Hard",
+    "requirement": "Write a python function `coin_change(coins: list[int], amount: int) -> int` that computes the fewest number of coins needed to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.",
+    "function_name": "coin_change",
+    "constraints": "1 <= len(coins) <= 12. 1 <= coins[i] <= 2^31 - 1. 0 <= amount <= 10^4.",
+    "edge_cases": [
+      "amount == 0 returns 0",
+      "No combination possible returns -1",
+      "Single coin denomination"
+    ],
+    "test_cases": [
+      {
+        "input": "([1, 2, 5], 11)",
+        "expected_output": 3,
+        "type": "normal"
+      },
+      {
+        "input": "([2], 3)",
+        "expected_output": -1,
+        "type": "edge_case"
+      },
+      {
+        "input": "([1], 0)",
+        "expected_output": 0,
+        "type": "edge_case"
+      },
+      {
+        "input": "([2, 5, 10, 1], 27)",
+        "expected_output": 4,
+        "type": "normal"
+      },
+      {
+        "input": "([186, 419, 83, 408], 6249)",
+        "expected_output": 20,
+        "type": "normal"
+      }
+    ],
+    "test_code": "assert coin_change([1, 2, 5], 11) == 3\nassert coin_change([2], 3) == -1\nassert coin_change([1], 0) == 0\nassert coin_change([2, 5, 10, 1], 27) == 4\nassert coin_change([186, 419, 83, 408], 6249) == 20"
+  }
+]

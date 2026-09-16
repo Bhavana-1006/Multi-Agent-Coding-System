@@ -1,0 +1,58 @@
+{
+  "dataset_stats": {
+    "total": 229,
+    "categories": {
+      "Math": 101,
+      "Data Structures": 16,
+      "Arrays": 29,
+      "Strings": 35,
+      "Searching & Sorting": 21,
+      "Trees & Graphs": 10,
+      "Dynamic Programming": 11,
+      "Recursion": 6
+    },
+    "difficulties": {
+      "Medium": 94,
+      "Easy": 122,
+      "Hard": 13
+    },
+    "sources": {
+      "HumanEval": 164,
+      "Custom": 65
+    },
+    "buggy_solutions_count": 95
+  },
+  "schema_validation": {
+    "valid": true,
+    "total_checked": 229,
+    "buggy_fields_checked": 95,
+    "error_count": 0,
+    "errors": []
+  },
+  "execution_validation": {
+    "total_evaluated": 95,
+    "execution_time_seconds": 65.35547065734863,
+    "canonical": {
+      "total": 95,
+      "passed": 95,
+      "failed": 0,
+      "pass_rate_pct": 100.0,
+      "failed_samples": []
+    },
+    "buggy": {
+      "total": 95,
+      "correctly_failed": 95,
+      "unexpected_passes": 0,
+      "detection_rate_pct": 100.0,
+      "unexpected_pass_ids": []
+    },
+    "repaired": {
+      "total": 95,
+      "passed": 95,
+      "failed": 0,
+      "pass_rate_pct": 100.0,
+      "failed_samples": []
+    }
+  },
+  "timestamp": "2026-09-08 11:41:09"
+}

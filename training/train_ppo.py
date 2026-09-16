@@ -9,15 +9,14 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 import gymnasium as gym
 from stable_baselines3 import PPO
 from orchestrator.rl_orchestrator import MultiAgentCodingEnv
+from training.benchmark_loader import load_local_benchmark
 
-def train(total_timesteps: int = 3000, save_dir: str = "training/models", simulated: bool = True):
+def train(total_timesteps: int = 10000, save_dir: str = "training/models", simulated: bool = True):
     os.makedirs(save_dir, exist_ok=True)
     
-    dataset_path = os.path.join(os.path.dirname(__file__), "..", "examples", "sample_requirements.json")
-    if os.path.exists(dataset_path):
-        with open(dataset_path, "r", encoding="utf-8") as f:
-            problems = json.load(f)
-    else:
+    try:
+        problems = load_local_benchmark("train")
+    except Exception:
         problems = None
 
     print(f"Initializing MultiAgentCodingEnv (simulated={simulated}) with {len(problems) if problems else 3} problems...")

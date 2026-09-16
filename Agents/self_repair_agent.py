@@ -59,6 +59,7 @@ INSTRUCTIONS:
         state.code = clean_code
         # Reset test_result since code has been modified and must be re-tested
         state.test_result = None
+        state.repair_attempt_count += 1
         state.action_history.append(self.name)
         state.step_count += 1
         self.log(f"Self-repair patch generated ({len(clean_code.splitlines())} lines). Ready for testing.")

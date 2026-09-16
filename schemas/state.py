@@ -43,6 +43,8 @@ class ProjectState(BaseModel):
     test_code: Optional[str] = None
     test_result: Optional[TestExecutionResult] = None
     error_analysis: Optional[str] = None
+    difficulty: str = "Medium"
+    repair_attempt_count: int = 0
     
     # Execution Tracking
     action_history: List[str] = Field(default_factory=list)
@@ -53,8 +55,8 @@ class ProjectState(BaseModel):
     
     def to_feature_vector(self) -> np.ndarray:
         """
-        Converts the discrete/continuous project state into a fixed-size 12-dimensional
-        feature vector for the RL observation space: Box(shape=(12,), low=0.0, high=1.0)
+        Converts the discrete/continuous project state into a fixed-size 15-dimensional
+        feature vector for the RL observation space: Box(shape=(15,), low=0.0, high=1.0)
         """
         has_req = 1.0 if self.structured_requirement is not None else 0.0
         has_plan = 1.0 if (self.plan is not None and len(self.plan) > 0) else 0.0
@@ -74,6 +76,18 @@ class ProjectState(BaseModel):
         step_progress = min(1.0, float(self.step_count) / float(max(1, self.max_steps)))
         recent_repair = 1.0 if (len(self.action_history) > 0 and self.action_history[-1] == "SelfRepairAgent") else 0.0
 
+        # Extended features for RL simulation alignment:
+        repair_count_norm = min(1.0, float(self.repair_attempt_count) / 3.0)
+        has_syntax_error = 1.0 if (self.test_result is not None and self.test_result.error_type == "SyntaxError") else 0.0
+        
+        diff_lower = (self.difficulty or "medium").lower()
+        if diff_lower == "easy":
+            diff_norm = 0.0
+        elif diff_lower == "hard":
+            diff_norm = 1.0
+        else:
+            diff_norm = 0.5
+
         vec = np.array([
             has_req,            # 0: Structured requirements extracted
             has_plan,           # 1: Implementation plan available
@@ -86,7 +100,10 @@ class ProjectState(BaseModel):
             pass_ratio,         # 8: Proportion of tests passed [0.0, 1.0]
             has_error_analysis, # 9: Error analysis performed
             step_progress,      # 10: Step count normalized [0.0, 1.0]
-            recent_repair       # 11: Most recent action was self-repair
+            recent_repair,      # 11: Most recent action was self-repair
+            repair_count_norm,  # 12: Normalized repair attempt count [0.0, 1.0]
+            has_syntax_error,   # 13: Binary flag for syntax errors [0.0, 1.0]
+            diff_norm           # 14: Normalized problem difficulty [0.0, 0.5, 1.0]
         ], dtype=np.float32)
         
         return vec

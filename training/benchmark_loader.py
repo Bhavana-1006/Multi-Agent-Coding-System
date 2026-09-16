@@ -5,44 +5,60 @@ from typing import List, Dict
 
 HUMANEVAL_URL = "https://raw.githubusercontent.com/openai/human-eval/master/data/HumanEval.jsonl.gz"
 
-def load_local_benchmark() -> List[Dict[str, str]]:
+def load_local_benchmark(split: str = "all", source: str = "all") -> List[Dict]:
     """
-    Loads benchmark problems from local examples or generates standard programming problems.
+    Loads benchmark problems from data/ splits ("all", "train", "val", "test")
+    optionally filtered by source ("all", "humaneval", "custom").
     """
-    sample_path = os.path.join(os.path.dirname(__file__), "..", "examples", "sample_requirements.json")
-    if os.path.exists(sample_path):
-        with open(sample_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-            
-    # Default set of algorithmic benchmark problems
-    return [
-        {
-            "id": "prob_001",
-            "requirement": "Write a python function `is_palindrome(s: str) -> bool` that returns True if a given string is a palindrome, ignoring casing and non-alphanumeric characters, and False otherwise.",
-            "test_code": "assert is_palindrome('A man, a plan, a canal: Panama') == True\nassert is_palindrome('race a car') == False\nassert is_palindrome('') == True\nassert is_palindrome('0P') == False\nassert is_palindrome('ab_a') == True"
-        },
-        {
-            "id": "prob_002",
-            "requirement": "Write a python function `two_sum(nums: list[int], target: int) -> list[int]` that returns the 0-based indices of the two numbers such that they add up to target. Assume exactly one solution exists.",
-            "test_code": "assert two_sum([2, 7, 11, 15], 9) == [0, 1]\nassert two_sum([3, 2, 4], 6) == [1, 2]\nassert two_sum([3, 3], 6) == [0, 1]"
-        },
-        {
-            "id": "prob_003",
-            "requirement": "Write a python function `valid_parentheses(s: str) -> bool` that checks if the input string containing characters '(', ')', '{', '}', '[' and ']' is valid.",
-            "test_code": "assert valid_parentheses('()') == True\nassert valid_parentheses('()[]{}') == True\nassert valid_parentheses('(]') == False\nassert valid_parentheses('([)]') == False\nassert valid_parentheses('{[]}') == True\nassert valid_parentheses('') == True"
-        },
-        {
-            "id": "prob_004",
-            "requirement": "Write a python function `max_subarray_sum(nums: list[int]) -> int` that finds the contiguous subarray with the largest sum and returns its sum.",
-            "test_code": "assert max_subarray_sum([-2, 1, -3, 4, -1, 2, 1, -5, 4]) == 6\nassert max_subarray_sum([1]) == 1\nassert max_subarray_sum([5, 4, -1, 7, 8]) == 23\nassert max_subarray_sum([-1, -2, -3]) == -1"
-        },
-        {
-            "id": "prob_005",
-            "requirement": "Write a python function `length_of_longest_substring(s: str) -> int` that finds the length of the longest substring without repeating characters.",
-            "test_code": "assert length_of_longest_substring('abcabcbb') == 3\nassert length_of_longest_substring('bbbbb') == 1\nassert length_of_longest_substring('pwwkew') == 3\nassert length_of_longest_substring('') == 0"
-        }
-    ]
+    split_map = {
+        "all": "problems_full.json",
+        "train": "train.json",
+        "val": "val.json",
+        "test": "test.json",
+    }
+    target_filename = split_map.get(split.lower(), "problems_full.json")
+    data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
+    split_path = os.path.join(data_dir, target_filename)
+
+    problems = []
+    if os.path.exists(split_path):
+        with open(split_path, "r", encoding="utf-8") as f:
+            problems = json.load(f)
+    else:
+        sample_path = os.path.join(os.path.dirname(__file__), "..", "examples", "sample_requirements.json")
+        if os.path.exists(sample_path):
+            with open(sample_path, "r", encoding="utf-8") as f:
+                problems = json.load(f)
+
+    if source.lower() == "humaneval":
+        return [p for p in problems if p.get("source", "").lower() == "humaneval" or "humaneval" in p.get("task_id", "").lower()]
+    elif source.lower() == "custom":
+        return [p for p in problems if p.get("source", "").lower() == "custom" or "custom" in p.get("task_id", "").lower()]
+    return problems
+
+def get_benchmark_stats(problems: List[Dict]) -> Dict:
+    """Computes category, difficulty, source, and failure metadata breakdown."""
+    stats = {
+        "total": len(problems),
+        "categories": {},
+        "difficulties": {},
+        "sources": {},
+        "buggy_solutions_count": 0
+    }
+    for p in problems:
+        cat = p.get("category", "General")
+        diff = p.get("difficulty", "Unspecified")
+        src = p.get("source", "Unknown")
+        stats["categories"][cat] = stats["categories"].get(cat, 0) + 1
+        stats["difficulties"][diff] = stats["difficulties"].get(diff, 0) + 1
+        stats["sources"][src] = stats["sources"].get(src, 0) + 1
+        if p.get("has_buggy_solution") or p.get("buggy_solution"):
+            stats["buggy_solutions_count"] += 1
+    return stats
 
 if __name__ == "__main__":
-    problems = load_local_benchmark()
-    print(f"Loaded {len(problems)} benchmark problems successfully.")
+    for split_name in ["all", "train", "val", "test"]:
+        p_list = load_local_benchmark(split=split_name)
+        stats = get_benchmark_stats(p_list)
+        print(f"[{split_name.upper():5s}] Loaded {len(p_list):3d} problems | Sources: {stats['sources']} | Difficulties: {stats['difficulties']}")
+

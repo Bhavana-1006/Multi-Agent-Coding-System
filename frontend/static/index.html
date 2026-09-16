@@ -3,825 +3,1490 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Multi-Agent Coding System with RL Orchestrator</title>
-  <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Synthetix • Multi-Agent Coding System</title>
+
+  <!-- Early theme initialization to eliminate flash of wrong theme -->
+  <script>
+    (function() {
+      try {
+        var stored = localStorage.getItem('synthetix_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (stored === 'dark' || (!stored && prefersDark)) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Google Fonts: Sora (display), Manrope (body) & JetBrains Mono (code) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Highlight.js for Syntax Highlighting -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/gruvbox-dark-medium.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-  <!-- Canvas Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: {
-            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-          },
           colors: {
-            sageBg: '#F3F6F1',
-            sageCard: '#FFFFFF',
-            sageSurface: '#E8EFE5',
-            sageBorder: '#C9D6C4',
-            sageBorderDark: '#A3B49E',
-            sageLight: '#9CB096',
-            olive: '#4A5D44',
-            oliveDark: '#354331',
-            oliveDeep: '#232D20',
-            mossText: '#2C3828',
-            sandAccent: '#D8C7B5',
-            clayAccent: '#B28266'
+            theme: {
+              main: 'var(--bg-main)',
+              secondary: 'var(--bg-secondary)',
+              surface: 'var(--bg-surface)',
+              elevated: 'var(--bg-surface-elevated)',
+              card: 'var(--bg-card)',
+              'card-hover': 'var(--bg-card-hover)',
+              input: 'var(--bg-input)',
+              header: 'var(--bg-header)',
+              subtle: 'var(--border-subtle)',
+              hover: 'var(--border-hover)',
+              focus: 'var(--border-focus)',
+              accent: 'var(--border-accent)',
+              text: 'var(--text-main)',
+              'text-secondary': 'var(--text-secondary)',
+              'text-muted': 'var(--text-muted)'
+            },
+            brand: {
+              purple: '#6D6AFE',
+              purpleHover: '#5852E8',
+              purpleSubtle: 'var(--primary-subtle)',
+              coral: '#FF6B6B',
+              coralHover: '#FF8585'
+            }
+          },
+          fontFamily: {
+            sans: ['"Manrope"', 'system-ui', 'sans-serif'],
+            display: ['"Sora"', '"Manrope"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'Consolas', 'monospace']
           }
         }
       }
-    }
+    };
   </script>
-  <style>
-    body {
-      background: radial-gradient(circle at top, #F7F9F5 0%, #EBF0E7 60%, #DFE7DB 100%);
-      min-height: 100vh;
-      color: #2C3828;
-    }
-    .editorial-panel {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(12px);
-      border: 1px solid #C9D6C4;
-      box-shadow: 0 4px 20px -2px rgba(44, 56, 40, 0.06);
-    }
-    .editorial-panel-sage {
-      background: rgba(232, 239, 229, 0.75);
-      border: 1px solid #B7C7B2;
-    }
-    .agent-active {
-      box-shadow: 0 0 20px rgba(74, 93, 68, 0.45);
-      border-color: #4A5D44 !important;
-      transform: scale(1.03);
-      background: #E8EFE5 !important;
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #EBF0E7;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #A3B49E;
-      border-radius: 4px;
-    }
-    .btn-olive {
-      background: #4A5D44;
-      color: #F7F9F5;
-      transition: all 0.2s ease;
-    }
-    .btn-olive:hover {
-      background: #354331;
-    }
-  </style>
+
+  <!-- Highlight.js for Python syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/dracula.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Modular Stylesheets -->
+  <link rel="stylesheet" href="/static/css/theme.css?v=5">
+  <link rel="stylesheet" href="/static/css/animations.css?v=5">
+  <link rel="stylesheet" href="/static/css/workspace.css?v=5">
 </head>
-<body class="font-sans antialiased custom-scrollbar selection:bg-olive selection:text-white">
 
-  <!-- Top Announcement Bar -->
-  <div class="bg-oliveDark text-sageBg text-[11px] uppercase tracking-[0.2em] font-medium py-1.5 text-center border-b border-olive/30">
-    Reinforcement Learning Orchestration • Autonomous Multi-Agent Development
-  </div>
+<body class="bg-theme-main text-theme-main font-sans antialiased relative min-h-screen selection:bg-brand-purple selection:text-white">
 
-  <!-- Navigation Bar -->
-  <header class="border-b border-sageBorder editorial-panel sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="h-10 w-10 rounded-full bg-olive flex items-center justify-center shadow-md text-sageBg">
-          <i data-lucide="compass" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h1 class="font-serif text-2xl font-bold text-oliveDark tracking-wide">
-            Multi-Agent System
-          </h1>
-          <p class="text-[10px] uppercase tracking-[0.18em] text-olive/80 font-medium">Adaptive RL Code Synthesizer</p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-3">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-sageSurface text-oliveDark border border-sageBorder shadow-sm">
-          <span class="w-2 h-2 rounded-full bg-olive animate-pulse"></span>
-          Groq / Free LLM Active
-        </span>
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white text-oliveDark border border-sageBorder shadow-sm">
-          <i data-lucide="cpu" class="w-3.5 h-3.5 text-olive"></i>
-          PPO Policy Loaded
-        </span>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-    <!-- Left Column: Input Controls (5 Cols) -->
-    <div class="lg:col-span-5 space-y-6">
+  <!-- ========================================================================= -->
+  <!-- NAVBAR (AgentForge Design System) -->
+  <!-- ========================================================================= -->
+  <header id="main-navbar" class="sticky top-0 z-40 transition-all duration-300 py-3.5 px-4 sm:px-8 border-b border-white/[0.08] bg-[#050508]/85 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
       
-      <!-- Input Card -->
-      <div class="editorial-panel rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center justify-between mb-3 border-b border-sageBorder/60 pb-3">
-          <label class="font-serif text-lg font-bold text-oliveDark flex items-center gap-2">
-            <i data-lucide="feather" class="w-4 h-4 text-olive"></i>
-            Software Requirement / Prompt
-          </label>
-          
-          <!-- Mode Selector Toggle -->
-          <div class="inline-flex bg-sageSurface p-0.5 rounded-full border border-sageBorder text-xs">
-            <button id="mode-rl" onclick="setMode('rl')" class="px-3 py-1 rounded-full font-semibold transition bg-olive text-white shadow-sm">
-              RL Orchestrator
-            </button>
-            <button id="mode-baseline" onclick="setMode('baseline')" class="px-3 py-1 rounded-full font-medium transition text-mossText hover:text-oliveDark">
-              Baseline
-            </button>
-          </div>
+      <!-- Brand Logo (Left) -->
+      <div class="flex items-center gap-2.5 cursor-pointer select-none group" onclick="navigateTo('landing')">
+        <!-- Glowing Geometric 'A' Chevron Icon with Sparkle -->
+        <div class="relative w-8 h-8 flex items-center justify-center shrink-0">
+          <svg class="w-8 h-8 drop-shadow-[0_0_10px_rgba(0,240,255,0.45)] transition-transform duration-300 group-hover:scale-105" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="navLogoGrad" x1="4" y1="28" x2="26" y2="4" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#2563EB" />
+                <stop offset="45%" stop-color="#38BDF8" />
+                <stop offset="100%" stop-color="#00F0FF" />
+              </linearGradient>
+            </defs>
+            <!-- Stylized Outer Triangle/Chevron 'A' -->
+            <path d="M14.2 4.8C15.0 3.5 16.9 3.5 17.7 4.8L28.1 23.2C29.0 24.7 27.9 26.6 26.2 26.6H21.5C20.8 26.6 20.2 26.2 19.8 25.6L16 18.5L12.2 25.6C11.8 26.2 11.2 26.6 10.5 26.6H5.8C4.1 26.6 3.0 24.7 3.9 23.2L14.2 4.8Z" fill="url(#navLogoGrad)"/>
+            <!-- Inner Arrow Cutout -->
+            <path d="M16 20.5L19.2 26.6H12.8L16 20.5Z" fill="url(#navLogoGrad)" opacity="0.85"/>
+            <!-- 4-point Sparkle Star -->
+            <path d="M26.5 2.5C26.5 4.5 27.2 5.5 29.5 5.5C27.2 5.5 26.5 6.5 26.5 8.5C26.5 6.5 25.8 5.5 23.5 5.5C25.8 5.5 26.5 4.5 26.5 2.5Z" fill="#00F0FF" class="drop-shadow-[0_0_4px_#00F0FF]"/>
+          </svg>
         </div>
-
-        <textarea id="req-input" rows="3" 
-          class="w-full bg-[#FAFCF9] border border-sageBorder rounded-xl p-3.5 text-xs text-mossText placeholder-olive/50 focus:outline-none focus:ring-1 focus:ring-olive focus:border-olive transition custom-scrollbar font-sans leading-relaxed"
-          placeholder="Describe your coding task (e.g. Write a python function is_palindrome(s: str) -> bool)...">Write a python function `is_palindrome(s: str) -> bool` that checks if a string is a palindrome, ignoring casing and non-alphanumeric characters.</textarea>
-
-        <!-- Quick Templates -->
-        <div class="mt-4">
-          <p class="text-[11px] uppercase tracking-wider text-olive/80 mb-2 font-semibold">Curated Benchmarks:</p>
-          <div class="flex flex-wrap gap-1.5" id="template-chips">
-            <button onclick="setTemplate('is_palindrome')" class="px-3 py-1 rounded-lg bg-sageSurface hover:bg-sageBorder text-xs text-oliveDark border border-sageBorder transition font-medium">Palindrome</button>
-            <button onclick="setTemplate('two_sum')" class="px-3 py-1 rounded-lg bg-sageSurface hover:bg-sageBorder text-xs text-oliveDark border border-sageBorder transition font-medium">Two Sum</button>
-            <button onclick="setTemplate('is_prime')" class="px-3 py-1 rounded-lg bg-sageSurface hover:bg-sageBorder text-xs text-oliveDark border border-sageBorder transition font-medium">Prime Check</button>
-            <button onclick="setTemplate('longest_consecutive')" class="px-3 py-1 rounded-lg bg-sageSurface hover:bg-sageBorder text-xs text-oliveDark border border-sageBorder transition font-medium">Longest Consecutive</button>
-            <button onclick="setTemplate('sum_of_digits')" class="px-3 py-1 rounded-lg bg-sageSurface hover:bg-sageBorder text-xs text-oliveDark border border-sageBorder transition font-medium">Sum of Digits</button>
-            <button onclick="setTemplate('power')" class="px-3 py-1 rounded-lg bg-sageSurface hover:bg-sageBorder text-xs text-oliveDark border border-sageBorder transition font-medium">Power</button>
-          </div>
+        <div class="flex items-center text-lg sm:text-[19px] font-bold tracking-tight font-display">
+          <span class="text-white">Agent</span><span class="text-cyan-400">Forge</span>
         </div>
+      </div>
 
-        <!-- Custom Test Cases Editor -->
-        <div class="mt-4 pt-3 border-t border-sageBorder/60">
-          <div class="flex items-center justify-between mb-2">
-            <label class="text-xs font-semibold text-oliveDark flex items-center gap-1.5">
-              <i data-lucide="flask-conical" class="w-3.5 h-3.5 text-olive"></i>
-              Custom Test Assertions
-            </label>
-            <span class="text-[10px] text-olive/70 italic">(Auto-generated if empty)</span>
-          </div>
-
-          <textarea id="custom-tests-input" rows="3" 
-            class="w-full bg-[#FAFCF9] border border-sageBorder rounded-xl p-2.5 text-xs font-mono text-mossText placeholder-olive/40 focus:outline-none focus:ring-1 focus:ring-olive custom-scrollbar"
-            placeholder="assert is_palindrome('racecar') == True&#10;assert is_palindrome('hello') == False">assert is_palindrome('A man, a plan, a canal: Panama') == True
-assert is_palindrome('race a car') == False
-assert is_palindrome('') == True
-assert is_palindrome('0P') == False</textarea>
-        </div>
-
-        <!-- Submit Button -->
-        <button id="run-btn" onclick="executePipeline()" 
-          class="mt-5 w-full btn-olive font-semibold py-3 px-4 rounded-xl shadow-sm flex items-center justify-center gap-2 transition active:scale-[0.98] tracking-wide text-xs uppercase">
-          <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
-          <span>Execute Multi-Agent System</span>
+      <!-- Center Navigation Links -->
+      <nav class="hidden md:flex items-center gap-1.5 lg:gap-2">
+        <!-- Overview (Active Pill Tab) -->
+        <button id="nav-btn-landing" onclick="navigateTo('landing')" class="nav-pill-active px-5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200">
+          Overview
         </button>
-      </div>
 
-      <!-- Agent Pool Architecture Overview Card -->
-      <div class="editorial-panel rounded-2xl p-6 shadow-sm">
-        <h3 class="font-serif text-lg font-bold text-oliveDark mb-3 flex items-center gap-2 border-b border-sageBorder/60 pb-2">
-          <i data-lucide="workflow" class="w-4 h-4 text-olive"></i>
-          Agent Pool Architecture
-        </h3>
-        
-        <div class="grid grid-cols-2 gap-2.5 text-xs" id="agent-nodes">
-          <div id="node-RequirementAnalyzer" class="p-3 rounded-xl bg-sageSurface/80 border border-sageBorder flex items-center gap-2.5 transition-all">
-            <div class="w-2.5 h-2.5 rounded-full bg-olive"></div>
-            <div>
-              <div class="font-semibold text-oliveDark">Req Analyzer</div>
-              <div class="text-[10px] text-olive/80">Spec Extraction</div>
-            </div>
-          </div>
+        <!-- Agents Link -->
+        <a href="#agents" onclick="if(window.location.hash==='#studio') navigateTo('landing');" class="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.04] transition-all duration-200">
+          Agents
+        </a>
 
-          <div id="node-PlanningAgent" class="p-3 rounded-xl bg-sageSurface/80 border border-sageBorder flex items-center gap-2.5 transition-all">
-            <div class="w-2.5 h-2.5 rounded-full bg-sandAccent"></div>
-            <div>
-              <div class="font-semibold text-oliveDark">Planning Agent</div>
-              <div class="text-[10px] text-olive/80">Decomposition</div>
-            </div>
-          </div>
+        <!-- How It Works Link -->
+        <a href="#how-it-works" onclick="if(window.location.hash==='#studio') navigateTo('landing');" class="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.04] transition-all duration-200">
+          How It Works
+        </a>
 
-          <div id="node-RetrievalAgent" class="p-3 rounded-xl bg-sageSurface/80 border border-sageBorder flex items-center gap-2.5 transition-all">
-            <div class="w-2.5 h-2.5 rounded-full bg-sageLight"></div>
-            <div>
-              <div class="font-semibold text-oliveDark">Retrieval Agent</div>
-              <div class="text-[10px] text-olive/80">RAG Vector Store</div>
-            </div>
-          </div>
+        <!-- Interactive Demo Link -->
+        <a href="#demo" onclick="if(window.location.hash==='#studio') navigateTo('landing');" class="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.04] transition-all duration-200">
+          Interactive Demo
+        </a>
+      </nav>
 
-          <div id="node-CodingAgent" class="p-3 rounded-xl bg-sageSurface/80 border border-sageBorder flex items-center gap-2.5 transition-all">
-            <div class="w-2.5 h-2.5 rounded-full bg-olive"></div>
-            <div>
-              <div class="font-semibold text-oliveDark">Coding Agent</div>
-              <div class="text-[10px] text-olive/80">Code Synthesizer</div>
-            </div>
-          </div>
+      <!-- Right Action Items -->
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <!-- Preserved DOM IDs for backend state safety -->
+        <span id="backend-provider-name" class="hidden">Groq Cloud</span>
+        <span id="nav-lib-count" class="hidden">40+</span>
 
-          <div id="node-TestingAgent" class="p-3 rounded-xl bg-sageSurface/80 border border-sageBorder flex items-center gap-2.5 transition-all">
-            <div class="w-2.5 h-2.5 rounded-full bg-oliveDark"></div>
-            <div>
-              <div class="font-semibold text-oliveDark">Testing Agent</div>
-              <div class="text-[10px] text-olive/80">Sandbox Runner</div>
-            </div>
-          </div>
+        <!-- Unauthenticated Buttons (Matching Image Reference) -->
+        <div id="nav-unauth-actions" class="flex items-center gap-2.5 sm:gap-3">
+          <!-- Sign In Button -->
+          <button onclick="AuthManager.openLoginModal()" class="flex items-center gap-2 px-4 sm:px-4.5 py-1.5 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/35 text-white text-xs sm:text-sm font-medium transition-all duration-200 shadow-xs">
+            <i data-lucide="user" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300"></i>
+            <span>Sign In</span>
+          </button>
 
-          <div id="node-ReviewAgent" class="p-3 rounded-xl bg-sageSurface/80 border border-sageBorder flex items-center gap-2.5 transition-all">
-            <div class="w-2.5 h-2.5 rounded-full bg-sandAccent"></div>
-            <div>
-              <div class="font-semibold text-oliveDark">Review Agent</div>
-              <div class="text-[10px] text-olive/80">Quality Checker</div>
-            </div>
-          </div>
-
-          <div id="node-ErrorAnalysisAgent" class="p-3 rounded-xl bg-sageSurface/80 border border-sageBorder flex items-center gap-2.5 transition-all">
-            <div class="w-2.5 h-2.5 rounded-full bg-clayAccent"></div>
-            <div>
-              <div class="font-semibold text-oliveDark">Error Analysis</div>
-              <div class="text-[10px] text-olive/80">Diagnostic Trace</div>
-            </div>
-          </div>
-
-          <div id="node-SelfRepairAgent" class="p-3 rounded-xl bg-sageSurface/80 border border-sageBorder flex items-center gap-2.5 transition-all">
-            <div class="w-2.5 h-2.5 rounded-full bg-olive"></div>
-            <div>
-              <div class="font-semibold text-oliveDark">Self Repair</div>
-              <div class="text-[10px] text-olive/80">Autonomous Patch</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Right Column: Results, Playground & Agent Trace (7 Cols) -->
-    <div class="lg:col-span-7 space-y-6">
-
-      <!-- Status Header Metrics -->
-      <div class="grid grid-cols-4 gap-3">
-        <div class="editorial-panel rounded-xl p-3.5 text-center">
-          <div class="text-[10px] uppercase font-semibold text-olive/70 tracking-widest">Test Suite</div>
-          <div id="metric-status" class="text-xs font-bold text-mossText mt-1">Ready</div>
-        </div>
-        <div class="editorial-panel rounded-xl p-3.5 text-center">
-          <div class="text-[10px] uppercase font-semibold text-olive/70 tracking-widest">Tests Passed</div>
-          <div id="metric-tests-ratio" class="text-xs font-bold text-olive mt-1">-- / --</div>
-        </div>
-        <div class="editorial-panel rounded-xl p-3.5 text-center">
-          <div class="text-[10px] uppercase font-semibold text-olive/70 tracking-widest">Quality Score</div>
-          <div id="metric-score" class="text-xs font-bold text-olive mt-1">-- / 1.0</div>
-        </div>
-        <div class="editorial-panel rounded-xl p-3.5 text-center">
-          <div class="text-[10px] uppercase font-semibold text-olive/70 tracking-widest">RL Reward</div>
-          <div id="metric-reward" class="text-xs font-bold text-mossText mt-1">--</div>
-        </div>
-      </div>
-
-      <!-- Main Tabbed Viewer -->
-      <div class="editorial-panel rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-[520px]">
-        <!-- Tab Navigation -->
-        <div class="flex items-center justify-between border-b border-sageBorder bg-sageSurface/50 px-5 pt-2">
-          <div class="flex items-center gap-2 flex-wrap">
-            <button onclick="switchTab('code')" id="tab-btn-code" class="px-3.5 py-2.5 text-xs font-semibold rounded-t-lg border-b-2 border-olive text-oliveDark flex items-center gap-1.5 transition">
-              <i data-lucide="code" class="w-3.5 h-3.5 text-olive"></i>
-              Generated Code
-            </button>
-            <button onclick="switchTab('playground')" id="tab-btn-playground" class="px-3.5 py-2.5 text-xs font-semibold rounded-t-lg border-b-2 border-transparent text-olive/70 hover:text-oliveDark flex items-center gap-1.5 transition">
-              <i data-lucide="play-circle" class="w-3.5 h-3.5 text-olive"></i>
-              Test Custom Input
-            </button>
-            <button onclick="switchTab('tests')" id="tab-btn-tests" class="px-3.5 py-2.5 text-xs font-semibold rounded-t-lg border-b-2 border-transparent text-olive/70 hover:text-oliveDark flex items-center gap-1.5 transition">
-              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-olive"></i>
-              Unit Tests & Sandbox
-            </button>
-            <button onclick="switchTab('review')" id="tab-btn-review" class="px-3.5 py-2.5 text-xs font-semibold rounded-t-lg border-b-2 border-transparent text-olive/70 hover:text-oliveDark flex items-center gap-1.5 transition">
-              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-olive"></i>
-              Code Review
-            </button>
-            <button onclick="switchTab('trace')" id="tab-btn-trace" class="px-3.5 py-2.5 text-xs font-semibold rounded-t-lg border-b-2 border-transparent text-olive/70 hover:text-oliveDark flex items-center gap-1.5 transition">
-              <i data-lucide="activity" class="w-3.5 h-3.5 text-olive"></i>
-              RL Agent Trace
-            </button>
-          </div>
-
-          <button onclick="copyCode()" id="copy-btn" class="text-xs text-oliveDark hover:text-olive flex items-center gap-1 px-3 py-1 rounded-lg bg-white border border-sageBorder transition shadow-sm font-medium">
-            <i data-lucide="copy" class="w-3 h-3 text-olive"></i>
-            <span>Copy</span>
+          <!-- Get Started Button -->
+          <button onclick="AuthManager.openRegisterModal()" class="flex items-center gap-1.5 px-5 sm:px-6 py-2 rounded-full bg-gradient-to-r from-[#2563EB] via-[#1D4ED8] to-[#00D4FF] hover:from-[#1D4ED8] hover:to-[#00F0FF] text-white font-semibold text-xs sm:text-sm shadow-[0_0_20px_rgba(0,212,255,0.45)] hover:shadow-[0_0_28px_rgba(0,240,255,0.65)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+            <span>Get Started</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
           </button>
         </div>
 
-        <!-- Tab 1: Code Content -->
-        <div id="tab-content-code" class="p-5 flex-1 flex flex-col bg-[#242E21]">
-          <pre class="flex-1 rounded-xl overflow-hidden"><code class="language-python rounded-xl h-full custom-scrollbar" id="code-display"># Generated Python solution will appear here after execution...
-def solution():
-    pass</code></pre>
+        <!-- Authenticated Profile (Shown when user is logged in) -->
+        <div id="nav-auth-actions" class="hidden items-center gap-2.5">
+          <div class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-950/30 text-white text-xs sm:text-sm font-medium shadow-[0_0_12px_rgba(0,240,255,0.15)]">
+            <div class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-[10px]">
+              <i data-lucide="user" class="w-3 h-3"></i>
+            </div>
+            <span id="nav-user-name" class="font-semibold text-slate-200">User</span>
+          </div>
+
+          <button id="nav-btn-studio" onclick="navigateTo('studio')" class="flex items-center gap-1.5 px-4.5 py-1.5 rounded-full bg-gradient-to-r from-[#2563EB] via-[#1D4ED8] to-[#00D4FF] text-white font-semibold text-xs sm:text-sm shadow-[0_0_16px_rgba(0,212,255,0.4)] hover:scale-[1.02] transition">
+            <span>Code Studio</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+
+          <button onclick="AuthManager.logout()" class="p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-red-400 transition" title="Log Out">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
         </div>
 
-        <!-- Tab 2: Interactive Playground / Run Custom Input -->
-        <div id="tab-content-playground" class="p-6 flex-1 hidden space-y-5 bg-white">
-          <div class="p-4 rounded-xl border border-sageBorder editorial-panel-sage flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-full bg-olive text-sageBg flex items-center justify-center shadow-sm">
-                <i data-lucide="terminal" class="w-4 h-4"></i>
-              </div>
-              <div>
-                <div class="text-xs font-bold text-oliveDark">Live Function Playground</div>
-                <div class="text-[11px] text-olive/80">Pass custom inputs or expressions to test against the generated solution.</div>
-              </div>
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition" title="Toggle Theme">
+          <i id="theme-icon" data-lucide="moon" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white transition">
+          <i data-lucide="menu" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden mt-2.5 p-3.5 rounded-2xl bg-[#090A12]/95 border border-white/10 backdrop-blur-xl space-y-1.5 shadow-2xl">
+      <button onclick="navigateTo('landing'); toggleMobileMenu();" class="w-full text-left py-2 px-3 rounded-xl text-xs font-medium text-white bg-cyan-500/10 border border-cyan-500/20">Overview</button>
+      <a href="#agents" onclick="toggleMobileMenu();" class="block py-2 px-3 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5">Agents</a>
+      <a href="#how-it-works" onclick="toggleMobileMenu();" class="block py-2 px-3 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5">How It Works</a>
+      <a href="#demo" onclick="toggleMobileMenu();" class="block py-2 px-3 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5">Interactive Demo</a>
+      <button onclick="navigateTo('studio'); toggleMobileMenu();" class="w-full text-left py-2 px-3 rounded-xl text-xs font-medium text-cyan-400 font-bold hover:bg-white/5 flex items-center justify-between">
+        <span>Studio Workspace</span>
+        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- VIEW 1: LANDING PAGE -->
+  <!-- ========================================================================= -->
+  <div id="view-landing" class="transition-opacity duration-300 relative z-10 overflow-hidden bg-[#050505] text-[#E2E8F0]">
+
+    <!-- ========================================================================= -->
+    <!-- 1. HERO SECTION WITH WEBGL SHADER BACKGROUND & MULTI-AGENT STAGE -->
+    <!-- ========================================================================= -->
+    <section class="relative min-h-[92vh] flex items-center justify-center pt-8 pb-16 lg:py-20 overflow-hidden border-b border-white/5">
+      
+      <!-- Shader Canvas: Sits in background, strongest activity on the right side behind IDE -->
+      <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <canvas id="hero-shader-canvas" class="w-full h-full block opacity-95"></canvas>
+        <!-- Asymmetric darkening gradient: ensures text readability on left -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/75 to-transparent pointer-events-none"></div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-6 w-full relative z-10">
+        <!-- 1A. HERO HORIZONTAL CONTENT SECTION -->
+        <div class="space-y-6 max-w-5xl reveal-on-scroll">
+          
+          <!-- Announcement Pill Badge -->
+          <div class="inline-flex items-center">
+            <a href="#agents" class="ref-pill-badge group">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              <span class="text-xs font-semibold text-slate-200">New: Multi-Agent Orchestration 2.0</span>
+              <span class="text-xs text-slate-500 font-normal">|</span>
+              <span class="text-xs font-medium text-cyan-300 group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                Meet your AI team <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </span>
+            </a>
+          </div>
+
+          <!-- Single Horizontal/Inline Hero Heading -->
+          <h1 class="text-4xl sm:text-5xl lg:text-[4.25rem] font-extrabold tracking-[-0.035em] text-white leading-[1.08] font-display">
+            Build Software With <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-400">AI Coding Agents.</span>
+          </h1>
+
+          <!-- Wide Horizontal Description Paragraph -->
+          <p class="text-base sm:text-lg lg:text-xl text-slate-300/90 leading-relaxed max-w-4xl font-normal">
+            Orchestrate specialized AI agents that plan, code, review, test, and debug your software together — completely verified inside an isolated execution sandbox.
+          </p>
+
+          <!-- Product-Specific Action CTAs Directly Below Description -->
+          <div class="flex flex-wrap items-center gap-4 pt-1">
+            <button onclick="navigateTo('studio')" class="btn-ref-primary group">
+              <span>Open Code Studio</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+            </button>
+            
+            <a href="#agents" class="btn-ref-secondary group">
+              <span>Explore Agents</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-hover:text-white transition-transform group-hover:translate-y-0.5"></i>
+            </a>
+          </div>
+
+          <!-- Technical Trust & Specs Strip -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-white/10 text-left max-w-2xl">
+            <div>
+              <div class="text-2xl font-bold font-display text-white">8</div>
+              <div class="text-[11px] text-slate-400 font-medium">Cooperating Agents</div>
+            </div>
+            <div>
+              <div class="text-2xl font-bold font-display text-cyan-400">100%</div>
+              <div class="text-[11px] text-slate-400 font-medium">Pytest Sandboxed</div>
+            </div>
+            <div>
+              <div class="text-2xl font-bold font-display text-violet-400">RL</div>
+              <div class="text-[11px] text-slate-400 font-medium">Dynamic Router</div>
+            </div>
+            <div>
+              <div class="text-2xl font-bold font-display text-amber-400">0</div>
+              <div class="text-[11px] text-slate-400 font-medium">Hallucination Loop</div>
             </div>
           </div>
 
-          <!-- Custom Input Execution Form -->
-          <div class="space-y-3">
-            <div>
-              <label class="text-xs font-semibold text-oliveDark mb-1.5 block flex items-center justify-between">
-                <span>Enter Custom Input / Function Call:</span>
-                <span class="text-[10px] text-olive/70 font-normal">e.g. "racecar" or is_palindrome("radar")</span>
-              </label>
-              <div class="flex gap-2">
-                <input id="playground-input" type="text" 
-                  class="flex-1 bg-[#FAFCF9] border border-sageBorder rounded-xl px-3.5 py-2.5 text-xs font-mono text-mossText placeholder-olive/40 focus:outline-none focus:ring-1 focus:ring-olive"
-                  placeholder='is_palindrome("Never odd or even")' value='is_palindrome("Never odd or even")'>
-                <button onclick="runCustomInputLive()" id="playground-run-btn"
-                  class="btn-olive text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition active:scale-95 shrink-0 uppercase tracking-wider">
-                  <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
-                  <span>Run Input</span>
+        </div>
+
+        <!-- 1B. MULTI-AGENT WORKFLOW DEMONSTRATION & AI ORB (CONTINUATION OF HERO) -->
+        <div class="mt-14 lg:mt-18 pt-10 border-t border-white/5 relative reveal-on-scroll reveal-delay-1">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+            
+            <!-- Explanatory Content Area (Left Side) - Clean Airy List Matching Reference -->
+            <div class="lg:col-span-6">
+              <div class="mb-7 sm:mb-9">
+                <div class="flex items-center gap-2.5 text-cyan-400 text-xs font-bold tracking-widest uppercase mb-3.5">
+                  <span class="w-5 h-[2px] bg-cyan-400 inline-block rounded-full"></span>
+                  <span>HOW IT WORKS</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl lg:text-[2.1rem] font-bold text-white font-display tracking-tight leading-[1.22] max-w-lg">
+                  Multiple AI agents collaborate to plan, build, review, test, and debug your software.
+                </h2>
+              </div>
+
+              <!-- Clean agent workflow list matching user reference without vertical side line -->
+              <div class="relative divide-y divide-white/10">
+                <!-- Step 1: Planner -->
+                <div id="step-planner" class="workflow-step-item flex items-center gap-4 sm:gap-5 py-3.5 sm:py-4 transition-all duration-300">
+                  <div class="step-icon-badge w-11 h-11 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 flex items-center justify-center shrink-0 shadow-[0_0_14px_rgba(0,240,255,0.25)]">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <h4 class="text-[15px] sm:text-base font-bold text-white leading-tight">Planner</h4>
+                    <p class="text-xs sm:text-[13px] text-slate-400 mt-1 leading-relaxed">Analyzes the request, breaks it into tasks, and creates a plan.</p>
+                  </div>
+                </div>
+
+                <!-- Step 2: Coder -->
+                <div id="step-coder" class="workflow-step-item flex items-center gap-4 sm:gap-5 py-3.5 sm:py-4 transition-all duration-300">
+                  <div class="step-icon-badge w-11 h-11 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/30 flex items-center justify-center shrink-0 shadow-[0_0_14px_rgba(59,130,246,0.25)]">
+                    <i data-lucide="code-2" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <h4 class="text-[15px] sm:text-base font-bold text-white leading-tight">Coder</h4>
+                    <p class="text-xs sm:text-[13px] text-slate-400 mt-1 leading-relaxed">Writes clean, efficient code based on the plan.</p>
+                  </div>
+                </div>
+
+                <!-- Step 3: Reviewer -->
+                <div id="step-reviewer" class="workflow-step-item flex items-center gap-4 sm:gap-5 py-3.5 sm:py-4 transition-all duration-300">
+                  <div class="step-icon-badge w-11 h-11 rounded-full bg-violet-500/15 text-violet-400 border border-violet-500/30 flex items-center justify-center shrink-0 shadow-[0_0_14px_rgba(139,92,246,0.25)]">
+                    <i data-lucide="search" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <h4 class="text-[15px] sm:text-base font-bold text-white leading-tight">Reviewer</h4>
+                    <p class="text-xs sm:text-[13px] text-slate-400 mt-1 leading-relaxed">Checks for quality, security, and best practices.</p>
+                  </div>
+                </div>
+
+                <!-- Step 4: Tester -->
+                <div id="step-tester" class="workflow-step-item flex items-center gap-4 sm:gap-5 py-3.5 sm:py-4 transition-all duration-300">
+                  <div class="step-icon-badge w-11 h-11 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0 shadow-[0_0_14px_rgba(245,158,11,0.25)]">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <h4 class="text-[15px] sm:text-base font-bold text-white leading-tight">Tester</h4>
+                    <p class="text-xs sm:text-[13px] text-slate-400 mt-1 leading-relaxed">Runs tests and validates the code.</p>
+                  </div>
+                </div>
+
+                <!-- Step 5: Debugger -->
+                <div id="step-debugger" class="workflow-step-item flex items-center gap-4 sm:gap-5 py-3.5 sm:py-4 transition-all duration-300">
+                  <div class="step-icon-badge w-11 h-11 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-[0_0_14px_rgba(16,185,129,0.25)]">
+                    <i data-lucide="bug" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <h4 class="text-[15px] sm:text-base font-bold text-white leading-tight">Debugger</h4>
+                    <p class="text-xs sm:text-[13px] text-slate-400 mt-1 leading-relaxed">Finds and fixes issues, ensuring everything works.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Animated Multi-Agent Code Studio Collaboration Engine (Right Side - Reduced Width) -->
+            <div class="lg:col-span-6 relative flex justify-center lg:justify-end">
+              
+              <!-- Subtle Animated AI Sphere / Orb underneath & around the code stage -->
+              <div class="absolute inset-0 -top-12 -bottom-12 -left-8 -right-8 pointer-events-none flex items-center justify-center overflow-visible z-0">
+                <canvas id="hero-ai-orb-canvas" class="w-full h-full max-w-[490px] max-h-[420px] opacity-75 block"></canvas>
+              </div>
+
+              <!-- The Active IDE Panel Container: Reduced Width & Sleek Compact Proportions -->
+              <div id="hero-agent-stage" class="relative z-10 rounded-2xl border border-white/12 bg-[#0A0B10]/92 backdrop-blur-xl shadow-2xl overflow-hidden w-full max-w-[460px] sm:max-w-[480px]">
+                
+                <!-- Editor Window Titlebar -->
+                <div class="px-3.5 py-2.5 bg-[#10121A]/95 border-b border-white/8 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
+                      <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+                      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                    </div>
+                    <div class="h-3.5 w-[1px] bg-white/10 mx-1.5"></div>
+                    <!-- Tab item -->
+                    <div class="flex items-center gap-1.5 text-[11px] font-mono text-slate-200 bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
+                      <i data-lucide="file-code" class="w-3.5 h-3.5 text-cyan-400"></i>
+                      <span id="stage-filename">lru_cache.py</span>
+                    </div>
+                  </div>
+
+                  <!-- Telemetry & Status Pill -->
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-mono text-slate-400 hidden sm:inline">Python 3.12</span>
+                    <div id="stage-status-pill" class="agent-pill-badge bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-[10px] px-2 py-0.5">
+                      <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                      <span>5 Active</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Multi-Agent Orchestration Strip: Planner -> Coder -> Reviewer -> Tester -> Debugger -->
+                <div class="px-3 py-2 bg-[#0D0E16]/85 border-b border-white/8">
+                  <div class="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
+                    <span>Collaborative Agent Matrix</span>
+                    <span class="text-cyan-400 font-mono text-[9px]">RL Orchestrated</span>
+                  </div>
+                  <div class="flex items-center justify-between gap-1 overflow-x-auto py-0.5">
+                    <!-- Planner -->
+                    <div id="agent-node-planner" class="agent-node agent-active shrink-0 text-[11px] py-1 px-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                      <span>Planner</span>
+                    </div>
+
+                    <!-- Conduit 1 -->
+                    <div id="conduit-1" class="workflow-conduit"></div>
+
+                    <!-- Coder -->
+                    <div id="agent-node-coder" class="agent-node agent-idle shrink-0 text-[11px] py-1 px-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                      <span>Coder</span>
+                    </div>
+
+                    <!-- Conduit 2 -->
+                    <div id="conduit-2" class="workflow-conduit"></div>
+
+                    <!-- Reviewer -->
+                    <div id="agent-node-reviewer" class="agent-node agent-idle shrink-0 text-[11px] py-1 px-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-violet-400"></span>
+                      <span>Reviewer</span>
+                    </div>
+
+                    <!-- Conduit 3 -->
+                    <div id="conduit-3" class="workflow-conduit"></div>
+
+                    <!-- Tester -->
+                    <div id="agent-node-tester" class="agent-node agent-idle shrink-0 text-[11px] py-1 px-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                      <span>Tester</span>
+                    </div>
+
+                    <!-- Conduit 4 -->
+                    <div id="conduit-4" class="workflow-conduit"></div>
+
+                    <!-- Debugger -->
+                    <div id="agent-node-debugger" class="agent-node agent-idle shrink-0 text-[11px] py-1 px-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                      <span>Debugger</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Animated Progressive Code Editor Body -->
+                <div class="p-3 font-mono text-xs leading-relaxed text-slate-200 bg-[#07080D]/95 flex gap-3 min-h-[190px] max-h-[220px] overflow-y-auto">
+                  <div id="stage-line-nums" class="select-none text-slate-600 text-right space-y-0.5 w-4 shrink-0 text-xs">
+                    <div>1</div>
+                  </div>
+                  <div id="stage-code-body" class="space-y-0.5 flex-1 min-w-0 font-mono text-xs">
+                    <span class="text-slate-500 italic">// Multi-Agent pipeline active...</span>
+                  </div>
+                </div>
+
+                <!-- Live Execution & Event Stream Bar -->
+                <div class="px-3 py-2 bg-[#0B0C13] border-t border-white/8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 text-[11px] font-mono">
+                  <div id="stage-status-log" class="flex items-center truncate text-slate-300 min-w-0">
+                    <span class="text-cyan-400 font-bold">[Planner]</span>
+                    <span class="text-slate-300 ml-1 truncate">Analyzing requirement specification...</span>
+                  </div>
+                  <div class="shrink-0 flex items-center gap-1.5">
+                    <button onclick="navigateTo('studio')" class="text-[10.5px] font-sans font-bold text-cyan-400 hover:text-cyan-300 hover:underline flex items-center gap-1 transition">
+                      <span>Open in Studio</span>
+                      <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 2. SECTION: YOUR AI CODING TEAM (Specialized Autonomous Agents) -->
+    <!-- ========================================================================= -->
+    <section id="agents" class="max-w-7xl mx-auto px-6 py-20 border-b border-white/5 relative">
+      <div class="max-w-2xl mb-12 reveal-on-scroll">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 mb-3">
+          <i data-lucide="users" class="w-3.5 h-3.5"></i>
+          <span>Autonomous AI Team</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-display">
+          Specialized agents. One unified system.
+        </h2>
+        <p class="text-sm sm:text-base text-slate-400 mt-2 leading-relaxed">
+          Instead of a single model guessing everything, multiple purpose-built agents collaborate at every stage of the software development lifecycle.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Agent 1: Planning Agent -->
+        <div class="dark-glass-card p-6 space-y-4 hover:border-cyan-500/40 transition group">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center font-bold">
+            <i data-lucide="git-branch" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white group-hover:text-cyan-400 transition">Planning Agent</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mt-1">
+              Deconstructs plain-English prompts into modular algorithmic steps, establishing execution invariants and time/space constraints.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-cyan-400 font-mono">
+            <span>Input: Requirement</span>
+            <span>Output: Step Plan</span>
+          </div>
+        </div>
+
+        <!-- Agent 2: Retrieval Agent -->
+        <div class="dark-glass-card p-6 space-y-4 hover:border-blue-500/40 transition group">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 flex items-center justify-center font-bold">
+            <i data-lucide="database" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white group-hover:text-blue-400 transition">Retrieval Agent</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mt-1">
+              Extracts context, libraries, and relevant code patterns from documentation to augment the coding agent with factual implementation grounding.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-blue-400 font-mono">
+            <span>Context: Docs & APIs</span>
+            <span>Grounding: 100%</span>
+          </div>
+        </div>
+
+        <!-- Agent 3: Coding Agent -->
+        <div class="dark-glass-card p-6 space-y-4 hover:border-indigo-500/40 transition group">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center font-bold">
+            <i data-lucide="terminal" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white group-hover:text-indigo-400 transition">Coding Agent</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mt-1">
+              Synthesizes clean, production-grade, type-annotated code adhering strictly to PEP 8 standards and the formulated architectural plan.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-indigo-400 font-mono">
+            <span>Language: Python 3.12</span>
+            <span>Typing: Strict</span>
+          </div>
+        </div>
+
+        <!-- Agent 4: Review Agent -->
+        <div class="dark-glass-card p-6 space-y-4 hover:border-violet-500/40 transition group">
+          <div class="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/30 text-violet-400 flex items-center justify-center font-bold">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white group-hover:text-violet-400 transition">Review Agent</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mt-1">
+              Audits cyclomatic complexity, checks edge cases, verifies potential security flaws, and assigns a quantitative quality score.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-violet-400 font-mono">
+            <span>Audit: Cyclomatic</span>
+            <span>Score: 0.0 - 10.0</span>
+          </div>
+        </div>
+
+        <!-- Agent 5: Testing Agent -->
+        <div class="dark-glass-card p-6 space-y-4 hover:border-amber-500/40 transition group">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold">
+            <i data-lucide="play-circle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white group-hover:text-amber-400 transition">Testing Agent</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mt-1">
+              Executes generated code against sandboxed pytest test cases in an isolated subprocess to ensure 100% assertion validity before acceptance.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-amber-400 font-mono">
+            <span>Sandbox: Subprocess</span>
+            <span>Validation: Pytest</span>
+          </div>
+        </div>
+
+        <!-- Agent 6: Self-Repair Agent -->
+        <div class="dark-glass-card p-6 space-y-4 hover:border-emerald-500/40 transition group">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold">
+            <i data-lucide="cpu" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white group-hover:text-emerald-400 transition">Self-Repair Agent</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mt-1">
+              When assertions or edge tests fail, analyzes traceback diagnostics and autonomously rewrites and repairs the defect until all tests pass.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-emerald-400 font-mono">
+            <span>Loop: Zero-Human</span>
+            <span>Status: Self-Healing</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 3. SECTION: HOW IT WORKS (RL Orchestration Pipeline) -->
+    <!-- ========================================================================= -->
+    <section id="how-it-works" class="max-w-7xl mx-auto px-6 py-20 border-b border-white/5 relative">
+      <div class="max-w-2xl mb-12 reveal-on-scroll">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-violet-500/10 text-violet-400 border border-violet-500/20 mb-3">
+          <i data-lucide="workflow" class="w-3.5 h-3.5"></i>
+          <span>RL Orchestration Pipeline</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-display">
+          How the multi-agent system operates.
+        </h2>
+        <p class="text-sm sm:text-base text-slate-400 mt-2 leading-relaxed">
+          A closed-loop autonomous cycle guided by reinforcement learning to route between specialized agents dynamically.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Step 1 -->
+        <div class="dark-glass-card p-6 space-y-3 relative group">
+          <span class="text-xs font-mono font-bold text-cyan-400">PHASE 01</span>
+          <h4 class="font-bold text-base text-white">Deconstruct Requirement</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            The Planning Agent extracts parameter constraints, input types, and algorithmic invariants directly from plain English.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="dark-glass-card p-6 space-y-3 relative group">
+          <span class="text-xs font-mono font-bold text-blue-400">PHASE 02</span>
+          <h4 class="font-bold text-base text-white">Synthesize Implementation</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Coding Agent turns the plan into modular, clean Python with type annotations, following best practice patterns.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="dark-glass-card p-6 space-y-3 relative group">
+          <span class="text-xs font-mono font-bold text-violet-400">PHASE 03</span>
+          <h4 class="font-bold text-base text-white">Review & Sandboxed Tests</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Review Agent computes quality scores while Testing Agent executes assertions in an isolated Python subprocess.
+          </p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="dark-glass-card p-6 space-y-3 relative group">
+          <span class="text-xs font-mono font-bold text-emerald-400">PHASE 04</span>
+          <h4 class="font-bold text-base text-white">Autonomous Self-Repair</h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            If test assertions fail, diagnostic error analysis pinpoints the traceback and patches the solution automatically.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 4. SECTION: INTERACTIVE DEMO (Preserving All Preset Functionality) -->
+    <!-- ========================================================================= -->
+    <section id="demo" class="max-w-7xl mx-auto px-6 py-20 border-b border-white/5 relative">
+      <div class="max-w-2xl mb-8 reveal-on-scroll">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-3">
+          <i data-lucide="play" class="w-3.5 h-3.5"></i>
+          <span>Interactive Studio Demo</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-display">
+          From requirement to verified code.
+        </h2>
+        <p class="text-sm sm:text-base text-slate-400 mt-2 leading-relaxed">
+          Select a sample requirement below to inspect generated solutions, or load it instantly into the Studio Workspace.
+        </p>
+      </div>
+
+      <!-- Preset Selector Chips -->
+      <div class="flex flex-wrap items-center gap-2.5 mb-6">
+        <button data-demo-key="students" class="preset-chip text-xs font-bold bg-white text-[#080808] border border-white rounded-full px-4 py-1.5 shadow-md transition transform -translate-y-0.5">
+          Top 3 Students
+        </button>
+        <button data-demo-key="palindrome" class="preset-chip text-xs font-semibold bg-white/5 text-slate-300 hover:text-white border border-white/10 hover:border-white/30 rounded-full px-4 py-1.5 transition">
+          Strict Palindrome
+        </button>
+        <button data-demo-key="twosum" class="preset-chip text-xs font-semibold bg-white/5 text-slate-300 hover:text-white border border-white/10 hover:border-white/30 rounded-full px-4 py-1.5 transition">
+          Two Sum Lookup
+        </button>
+        <button data-demo-key="ratelimiter" class="preset-chip text-xs font-semibold bg-white/5 text-slate-300 hover:text-white border border-white/10 hover:border-white/30 rounded-full px-4 py-1.5 transition">
+          Rate Limiter
+        </button>
+      </div>
+
+      <!-- Two Connected Panels -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        
+        <!-- Left Panel: Your Requirement (5 Cols) -->
+        <div class="lg:col-span-5 dark-glass-card p-6 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-white/10">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-200">Specification Input</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">Editable</span>
+            </div>
+            <textarea id="demo-requirement-text" rows="5" 
+              class="w-full bg-[#08090E] border border-white/10 rounded-xl p-3.5 text-xs text-slate-200 resize-none font-mono focus:outline-none focus:border-cyan-400 transition leading-relaxed"
+              placeholder="Describe your coding task...">Create a Python function that returns the top 3 students based on their marks, breaking ties by name.</textarea>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Synthetix deconstructs constraints, types, and edge cases directly from this specification.
+            </p>
+          </div>
+
+          <div class="pt-5 border-t border-white/10 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400">Launch in live environment?</span>
+            <button onclick="LandingManager.launchDemoInStudio()" class="btn-ref-primary text-xs py-2 px-4">
+              <span>Open in Studio</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Panel: Generated Result (7 Cols) -->
+        <div class="lg:col-span-7 dark-glass-card flex flex-col justify-between overflow-hidden">
+          <div>
+            <div class="px-5 py-3.5 bg-[#10121A]/80 border-b border-white/10 flex items-center justify-between">
+              <span class="text-xs font-mono text-slate-200 flex items-center gap-2">
+                <i data-lucide="file-code" class="w-4 h-4 text-cyan-400"></i>
+                <span>Generated Output</span>
+              </span>
+              <span class="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                <i data-lucide="check-circle" class="w-3 h-3"></i>
+                <span>Sandbox Verified</span>
+              </span>
+            </div>
+            <pre class="p-5 m-0 font-mono text-xs text-slate-200 leading-relaxed overflow-x-auto bg-[#07080D]"><code id="demo-code-block" class="language-python">def top_students(students: list[dict]) -> list[dict]:
+    """
+    Returns the top 3 student records sorted by marks descending.
+    Ties broken alphabetically by student name.
+    """
+    if not students:
+        return []
+    
+    return sorted(
+        students,
+        key=lambda s: (-s.get("marks", 0), s.get("name", ""))
+    )[:3]</code></pre>
+          </div>
+
+          <div class="px-5 py-3 bg-[#0A0B10] border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+            <span>PEP 8 Compliant • O(N log N) Time</span>
+            <button onclick="LandingManager.launchDemoInStudio()" class="text-xs text-cyan-400 font-semibold hover:underline flex items-center gap-1">
+              <span>Run in Sandbox</span>
+              <i data-lucide="external-link" class="w-3 h-3"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 5. SECTION: CURATED BENCHMARKS (Direct Launch into Studio) -->
+    <!-- ========================================================================= -->
+    <section id="benchmarks" class="max-w-7xl mx-auto px-6 py-20 border-b border-white/5 relative">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10 reveal-on-scroll">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-3">
+            <i data-lucide="award" class="w-3.5 h-3.5"></i>
+            <span>Curated Benchmarks</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-display">
+            Stress-tested on standard algorithms.
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">Load any benchmark directly into the Studio Workspace to evaluate multi-agent performance.</p>
+        </div>
+        <button onclick="openProblemModal()" class="btn-ref-secondary text-xs px-4 py-2">
+          <span>Browse All 40+ Benchmarks</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Challenge 1 -->
+        <div onclick="WorkspaceManager.selectProblem({name:'is_palindrome', category:'String', difficulty:'Easy', requirement:'Write a python function is_palindrome(s: str) -> bool that checks if a string is a palindrome, ignoring casing and non-alphanumeric characters.', test_code:'assert is_palindrome(\'racecar\') == True\nassert is_palindrome(\'hello\') == False', function_name:'is_palindrome'})" class="dark-glass-card p-6 cursor-pointer group hover:border-cyan-500/50">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-mono text-xs font-bold text-white group-hover:text-cyan-400 transition">is_palindrome(s)</span>
+            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Easy</span>
+          </div>
+          <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">
+            Determine if a string reads the same backward as forward, ignoring casing and non-alphanumeric symbols.
+          </p>
+          <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] text-cyan-400 font-semibold">
+            <span>String Manipulation</span>
+            <span class="flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              <span>Launch</span>
+              <i data-lucide="arrow-right" class="w-3 h-3"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Challenge 2 -->
+        <div onclick="WorkspaceManager.selectProblem({name:'two_sum', category:'Hash Table', difficulty:'Easy', requirement:'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target in O(n) hash map time.', test_code:'assert two_sum([2, 7, 11, 15], 9) == [0, 1]\nassert two_sum([3, 2, 4], 6) == [1, 2]', function_name:'two_sum'})" class="dark-glass-card p-6 cursor-pointer group hover:border-cyan-500/50">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-mono text-xs font-bold text-white group-hover:text-cyan-400 transition">two_sum(nums, target)</span>
+            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Easy</span>
+          </div>
+          <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">
+            Locate index positions of pair summing to target value in linear O(n) hash map time complexity.
+          </p>
+          <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] text-cyan-400 font-semibold">
+            <span>Hash Table & Array</span>
+            <span class="flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              <span>Launch</span>
+              <i data-lucide="arrow-right" class="w-3 h-3"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Challenge 3 -->
+        <div onclick="WorkspaceManager.selectProblem({name:'longest_consecutive', category:'Set Algorithm', difficulty:'Medium', requirement:'Find the length of the longest consecutive elements sequence in an unsorted array in strict O(n) time.', test_code:'assert longest_consecutive([100, 4, 200, 1, 3, 2]) == 4', function_name:'longest_consecutive'})" class="dark-glass-card p-6 cursor-pointer group hover:border-cyan-500/50">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-mono text-xs font-bold text-white group-hover:text-cyan-400 transition">longest_consecutive(nums)</span>
+            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30">Medium</span>
+          </div>
+          <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">
+            Compute the maximum run length of consecutive integers using hash set lookups in strict O(n) time.
+          </p>
+          <div class="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] text-cyan-400 font-semibold">
+            <span>Set Algorithm</span>
+            <span class="flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              <span>Launch</span>
+              <i data-lucide="arrow-right" class="w-3 h-3"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 6. SECTION: CLOSING CTA BANNER -->
+    <!-- ========================================================================= -->
+    <section class="max-w-5xl mx-auto px-6 py-20 text-center relative">
+      <div class="relative rounded-3xl p-8 sm:p-14 border border-white/10 bg-gradient-to-b from-[#10121B] to-[#07080D] shadow-2xl space-y-6 overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-display">
+          Ready to build with AI coding agents?
+        </h3>
+        <p class="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
+          Launch the Studio Workspace to enter requirements in plain English and watch autonomous agents collaborate to write, review, and test your code.
+        </p>
+        <div class="pt-2">
+          <button onclick="navigateTo('studio')" class="btn-ref-primary text-sm py-3 px-8">
+            <span>Open Code Studio</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 7. SECTION: FOOTER -->
+    <!-- ========================================================================= -->
+    <footer class="border-t border-white/10 py-10 text-center text-xs text-slate-500">
+      <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center text-cyan-400">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          </div>
+          <span class="font-bold text-slate-300">Synthetix Multi-Agent Coding System</span>
+        </div>
+        <div class="flex justify-center gap-6 text-slate-400">
+          <button onclick="navigateTo('landing')" class="hover:text-white transition">Overview</button>
+          <a href="#agents" class="hover:text-white transition">Agents</a>
+          <a href="#how-it-works" class="hover:text-white transition">Workflow</a>
+          <button onclick="navigateTo('studio')" class="hover:text-white transition">Studio Workspace</button>
+          <button onclick="openProblemModal()" class="hover:text-white transition">Benchmark Library</button>
+        </div>
+        <div class="text-[11px] text-slate-500">
+          Autonomous Reinforcement Learning Engine
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- VIEW 2: STUDIO WORKSPACE (CONVERSATIONAL CODING ASSISTANT) -->
+  <!-- ========================================================================= -->
+  <div id="view-studio" class="hidden transition-opacity duration-300 relative z-10 pb-16 bg-[#050508] text-[#E2E8F0] min-h-screen">
+    
+    <!-- Ambient Background Lighting (Matching Landing Page) -->
+    <div class="studio-ambient-glow"></div>
+
+    <!-- Workspace Top Subnav / Header -->
+    <header class="workspace-header">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        
+        <!-- Left: Navigation & Sidebar Toggle -->
+        <div class="flex items-center gap-3">
+          <button onclick="navigateTo('landing')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/12 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 text-slate-300 hover:text-white text-xs font-medium transition" title="Back to Overview">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">Overview</span>
+          </button>
+          
+          <button id="sidebar-toggle-btn" onclick="WorkspaceManager.toggleSidebar()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/12 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 text-slate-300 hover:text-white text-xs font-medium transition" title="Toggle Recent Tasks Sidebar">
+            <i data-lucide="panel-left" class="w-3.5 h-3.5"></i>
+            <span class="text-[11px] hidden md:inline">History</span>
+          </button>
+
+          <span class="text-xs text-slate-600 hidden sm:inline">/</span>
+          <span id="workspace-title-breadcrumb" class="text-xs font-semibold text-white truncate max-w-[200px] sm:max-w-xs font-display">Studio Workspace</span>
+        </div>
+
+        <!-- Right: Actions & Settings -->
+        <div class="flex items-center gap-2.5">
+          <button onclick="WorkspaceManager.resetToNewTask()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 hover:border-cyan-500/50 text-cyan-300 text-xs font-semibold shadow-[0_0_12px_rgba(0,240,255,0.15)] transition">
+            <i data-lucide="plus" class="w-3.5 h-3.5 text-cyan-400"></i>
+            <span class="hidden sm:inline">New Task</span>
+          </button>
+
+          <button onclick="openProblemModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/12 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 text-slate-300 hover:text-white text-xs font-medium transition" title="Explore Benchmark Library">
+            <i data-lucide="book-open" class="w-3.5 h-3.5 text-slate-400"></i>
+            <span class="hidden sm:inline">Benchmarks</span>
+          </button>
+
+          <!-- Settings Drawer Trigger Button -->
+          <button id="settings-open-btn" onclick="WorkspaceManager.openSettings()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/12 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 text-slate-300 hover:text-white text-xs font-medium transition" title="Workspace Settings">
+            <i data-lucide="settings" class="w-3.5 h-3.5 text-slate-400"></i>
+            <span class="hidden sm:inline">Settings</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Workspace Main Body with Optional Left Sidebar -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex gap-6 items-start relative z-10">
+
+      <!-- Left Sidebar: Recent User Requests (Collapsible) -->
+      <aside id="studio-sidebar" class="studio-sidebar w-64 shrink-0 transition-all duration-300 hidden md:block">
+        <div class="studio-sidebar-content p-3.5 space-y-4 shadow-xl">
+          
+          <div class="flex items-center justify-between pb-2.5 border-b border-white/[0.08]">
+            <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white">
+              <i data-lucide="history" class="w-3.5 h-3.5 text-cyan-400"></i>
+              <span>Recent Requests</span>
+            </div>
+            <button onclick="WorkspaceManager.clearHistory()" class="text-[10px] text-slate-400 hover:text-rose-400 transition" title="Clear History">Clear</button>
+          </div>
+
+          <!-- New Task Action -->
+          <button onclick="WorkspaceManager.resetToNewTask()" class="w-full text-xs py-2 px-3 rounded-xl flex items-center gap-2 justify-center font-semibold border border-dashed border-cyan-500/30 bg-cyan-500/[0.04] hover:bg-cyan-500/10 hover:border-cyan-500/60 text-cyan-300 transition">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-cyan-400"></i>
+            <span>New Coding Task</span>
+          </button>
+
+          <!-- Recent Requests Dynamic List -->
+          <div id="recent-requests-list" class="space-y-1.5 max-h-[65vh] overflow-y-auto pr-1">
+            <div class="text-[11px] text-slate-400 italic p-3 text-center">
+              Your previous coding requests will appear here.
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- Main Workspace Center (USER REQUEST -> GENERATED CODE -> CUSTOM INPUT -> OUTPUT) -->
+      <main id="studio-main-content" class="flex-1 min-w-0 space-y-6">
+
+        <!-- ========================================================================= -->
+        <!-- STATE A: INITIAL / EMPTY STATE ("What do you want to build?") -->
+        <!-- ========================================================================= -->
+        <section id="studio-empty-state" class="empty-state-container py-12 sm:py-20 flex flex-col items-center justify-center text-center transition-all duration-300">
+          <div class="max-w-2xl w-full mx-auto space-y-6">
+            
+            <div class="space-y-2">
+              <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-white font-display">
+                What do you want to build?
+              </h1>
+              <p class="text-sm sm:text-base text-slate-400">
+                Describe your coding requirement in plain English.
+              </p>
+            </div>
+
+            <!-- Conversational Hero Input Box -->
+            <div class="empty-input-card text-left p-4 sm:p-5 shadow-2xl space-y-3 transition-all">
+              <textarea id="req-input-empty" rows="4" 
+                class="w-full bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none resize-none font-sans leading-relaxed"
+                placeholder="Create a Python function that checks whether a string is a palindrome, ignoring spaces and punctuation..."></textarea>
+
+              <div class="flex items-center justify-between pt-2 border-t border-white/[0.08]">
+                <span class="text-[11px] text-slate-400 font-mono flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></span>
+                  <span>Python 3</span>
+                </span>
+
+                <button id="generate-btn-empty" onclick="WorkspaceManager.submitInitialPrompt()" class="btn-primary text-xs sm:text-sm font-semibold px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-[0_0_20px_rgba(0,212,255,0.45)] hover:shadow-[0_0_28px_rgba(0,240,255,0.65)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+                  <span>Generate Code</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
               </div>
             </div>
 
-            <!-- Output Box -->
-            <div class="p-4 rounded-xl bg-sageSurface/50 border border-sageBorder space-y-3">
-              <div class="flex items-center justify-between border-b border-sageBorder pb-2">
-                <span class="text-xs font-bold text-oliveDark flex items-center gap-1.5">
-                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-olive"></i>
-                  Execution Output
-                </span>
-                <span id="playground-time" class="text-[10px] font-mono text-olive/80">-- ms</span>
-              </div>
+          </div>
+        </section>
 
-              <!-- Return Value Display -->
-              <div>
-                <div class="text-[11px] font-medium text-olive/80 mb-1">Returned Value:</div>
-                <div id="playground-output-val" class="p-3 rounded-lg bg-white border border-sageBorder text-sm font-mono font-bold text-oliveDark">
-                  Awaiting execution...
+
+        <!-- ========================================================================= -->
+        <!-- STATE B: ACTIVE WORKSPACE STATE -->
+        <!-- ========================================================================= -->
+        <section id="studio-active-state" class="hidden space-y-6 transition-all duration-300">
+
+          <!-- 1. USER REQUIREMENT CONTEXT CARD (Upper center / left) -->
+          <div id="req-bubble-card" class="p-4 sm:p-5 shadow-xl transition-all">
+            <div class="flex items-start justify-between gap-4">
+              <div class="space-y-1 flex-1 min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></span>
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Your Request</span>
+                </div>
+                <p id="submitted-req-text" class="text-xs sm:text-sm font-medium text-white leading-relaxed select-text"></p>
+                <!-- Inline edit box (hidden by default) -->
+                <div id="req-edit-container" class="hidden pt-2 space-y-2">
+                  <textarea id="req-edit-input" rows="3" class="w-full workspace-textarea text-xs"></textarea>
+                  <div class="flex items-center gap-2">
+                    <button onclick="WorkspaceManager.saveEditedRequirement()" class="btn-primary text-xs px-3 py-1.5 rounded-lg">Save & Regenerate</button>
+                    <button onclick="WorkspaceManager.cancelEditRequirement()" class="btn-secondary text-xs px-3 py-1.5 rounded-lg border border-white/12 bg-white/[0.03] hover:bg-white/[0.08] text-slate-300 hover:text-white">Cancel</button>
+                  </div>
                 </div>
               </div>
 
-              <!-- Console Stdout (if any) -->
-              <div id="playground-stdout-box" class="hidden">
-                <div class="text-[11px] font-medium text-olive/80 mb-1">Printed Output (stdout):</div>
-                <pre id="playground-stdout-val" class="p-2.5 rounded-lg bg-white border border-sageBorder text-xs font-mono text-mossText overflow-x-auto"></pre>
-              </div>
-
-              <!-- Error Message (if any) -->
-              <div id="playground-err-box" class="hidden">
-                <div class="text-[11px] font-medium text-clayAccent mb-1">Error / Exception:</div>
-                <pre id="playground-err-val" class="p-2.5 rounded-lg bg-red-50 border border-red-200 text-xs font-mono text-red-700 overflow-x-auto"></pre>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button id="req-edit-btn" onclick="WorkspaceManager.startEditRequirement()" class="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-white/12 bg-white/[0.03] hover:bg-white/[0.08] text-slate-300 hover:text-white text-[11px] font-medium transition" title="Edit Requirement">
+                  <i data-lucide="edit-3" class="w-3 h-3"></i>
+                  <span>Edit</span>
+                </button>
+                <button onclick="WorkspaceManager.resetToNewTask()" class="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-white/12 bg-white/[0.03] hover:bg-white/[0.08] text-slate-300 hover:text-white text-[11px] font-medium transition" title="New Requirement">
+                  <i data-lucide="plus" class="w-3 h-3"></i>
+                  <span class="hidden sm:inline">New</span>
+                </button>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Tab 3: Test Sandbox Content -->
-        <div id="tab-content-tests" class="p-6 flex-1 hidden space-y-5 bg-white">
-          
-          <!-- Test Banner -->
-          <div id="test-banner" class="p-4 rounded-xl border border-sageBorder editorial-panel-sage flex items-center gap-3">
-            <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-olive border border-sageBorder" id="test-icon">
-              <i data-lucide="help-circle" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <div class="text-xs font-bold text-oliveDark" id="test-summary-title">Awaiting Execution</div>
-              <div class="text-[11px] text-olive/80" id="test-summary-desc">Run the pipeline to test code in the isolated subprocess sandbox.</div>
-            </div>
-          </div>
+          <!-- Hidden compatibility elements to maintain landing page demo & API bindings -->
+          <textarea id="req-input" class="hidden"></textarea>
+          <textarea id="custom-tests-input" class="hidden"></textarea>
+          <button id="run-btn" class="hidden"></button>
 
-          <!-- Individual Executed Test Cases Cards -->
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-bold text-oliveDark flex items-center gap-1.5">
-                <i data-lucide="list-checks" class="w-4 h-4 text-olive"></i>
-                Individual Test Case Assertions:
-              </span>
-              <span id="test-count-badge" class="text-[10px] px-2.5 py-0.5 rounded-full bg-sageSurface text-oliveDark font-mono border border-sageBorder">0 tests</span>
-            </div>
+          <!-- 2. GENERATED CODE (MAIN FOCUS OF THE WORKSPACE) -->
+          <div id="code-editor-card" class="bg-theme-surface border border-theme-subtle rounded-xl overflow-hidden shadow-md transition-all">
             
-            <div class="space-y-2 max-h-56 overflow-y-auto custom-scrollbar" id="test-cases-list">
-              <div class="text-xs text-olive/70 italic p-3 rounded-lg bg-[#FAFCF9] border border-sageBorder">
-                No test assertions evaluated yet.
+            <!-- Code Editor Header Bar -->
+            <div class="code-editor-header flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-theme-subtle">
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="code-2" class="w-4 h-4 text-cyan-400"></i>
+                  <span class="text-xs sm:text-sm font-bold text-white font-display">Generated Code</span>
+                </div>
+                <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/25 text-cyan-300 font-semibold">
+                  Python 3
+                </span>
+                <span id="code-status-pill" class="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  <span>Ready</span>
+                </span>
+              </div>
+
+              <!-- Action Buttons (Only Useful Actions) -->
+              <div class="flex items-center gap-2">
+                <button id="editor-run-btn" onclick="WorkspaceManager.runGeneratedCode()" class="btn-primary text-xs font-semibold px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-[0_0_14px_rgba(0,212,255,0.35)]">
+                  <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                  <span>Run Code</span>
+                </button>
+
+                <button id="copy-code-btn" onclick="WorkspaceManager.copyCodeToClipboard()" class="btn-secondary text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.06] transition" title="Copy code to clipboard">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  <span class="hidden sm:inline">Copy</span>
+                </button>
+
+                <button id="regenerate-btn" onclick="WorkspaceManager.regenerateCode()" class="btn-secondary text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.06] transition" title="Regenerate solution">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                  <span class="hidden sm:inline">Regenerate</span>
+                </button>
+
+                <button id="explain-btn" onclick="WorkspaceManager.explainCode()" class="btn-secondary text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.06] transition" title="Explain how this code works">
+                  <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                  <span class="hidden sm:inline">Explain</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Code Body Container -->
+            <div class="relative bg-[#06070C] min-h-[260px]">
+              
+              <!-- Clean Loading State inside Editor -->
+              <div id="code-generating-state" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#06070C]/90 backdrop-blur-sm p-6 space-y-3">
+                <div class="flex items-center gap-2.5 text-white text-sm font-medium">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                  <span>Generating your solution...</span>
+                  <span class="typing-cursor"></span>
+                </div>
+                <p class="text-xs text-slate-400">Synthesizing robust, typed Python code and edge cases.</p>
+              </div>
+
+              <!-- Syntax-Highlighted Code Pre -->
+              <pre class="code-editor-pre m-0 p-4 sm:p-5 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto text-[#ECEDFA]"><code id="code-display" class="language-python"># Generated solution will appear here...</code></pre>
+            </div>
+
+            <!-- Editor Subtle Status Footer -->
+            <div class="px-4 py-2 bg-[#080911] border-t border-theme-subtle flex items-center justify-between text-[11px] text-slate-400">
+              <div class="flex items-center gap-3">
+                <span id="editor-readiness-label" class="flex items-center gap-1.5 text-slate-300">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                  <span>Code generated • Ready to test</span>
+                </span>
+              </div>
+              <span id="editor-tokens-or-time" class="font-mono text-[10px] text-cyan-400/80">Sandbox Ready</span>
+            </div>
+
+          </div>
+
+
+          <!-- 3. CUSTOM INPUT / OUTPUT SECTION ("Try your own input") -->
+          <div id="custom-input-card" class="bg-theme-surface border border-theme-subtle rounded-xl p-5 shadow-sm space-y-4">
+            
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-bold text-white flex items-center gap-2 font-display">
+                  <i data-lucide="terminal" class="w-4 h-4 text-cyan-400"></i>
+                  <span>Try your own input</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  Test the generated function with any custom argument or call.
+                </p>
+              </div>
+              <span id="playground-time" class="text-xs font-mono text-cyan-400/80">0.0 ms</span>
+            </div>
+
+            <!-- Input Row -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Input Expression</label>
+              <div class="flex items-center gap-2.5">
+                <div class="relative flex-1">
+                  <input id="playground-input" type="text" 
+                    class="w-full workspace-input font-mono text-xs sm:text-sm py-2.5 px-3.5 bg-theme-input border border-theme-subtle rounded-lg text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                    placeholder='is_palindrome("A man, a plan, a canal: Panama")' />
+                </div>
+                <button id="playground-run-btn" onclick="WorkspaceManager.runCustomInputLive()" class="btn-primary text-xs font-semibold px-4 py-2.5 rounded-lg flex items-center gap-1.5 shrink-0 shadow-[0_0_14px_rgba(0,212,255,0.35)]">
+                  <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                  <span>Run</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Output Display -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Output</label>
+                <span id="playground-status-badge" class="text-[10px] font-mono text-slate-400">Awaiting run</span>
+              </div>
+              
+              <div id="playground-output-val" class="output-display-box p-3.5 rounded-lg bg-theme-input border border-theme-subtle font-mono text-xs sm:text-sm text-slate-400 select-text min-h-[44px] flex items-center">
+                (Click "Run" to test custom input against your code)
+              </div>
+            </div>
+
+            <!-- Terminal stdout (hidden unless produced) -->
+            <div id="playground-stdout-box" class="space-y-1 hidden">
+              <span class="text-[11px] font-mono text-slate-400">Terminal stdout:</span>
+              <pre id="playground-stdout-val" class="terminal-box text-xs"></pre>
+            </div>
+
+            <!-- Execution Error (hidden unless error) -->
+            <div id="playground-err-box" class="space-y-1 hidden">
+              <span class="text-[11px] font-mono text-rose-400 flex items-center gap-1">
+                <i data-lucide="alert-triangle" class="w-3 h-3"></i>
+                <span>Execution Error:</span>
+              </span>
+              <pre id="playground-err-val" class="terminal-box text-xs text-rose-400 border-rose-500/30"></pre>
+            </div>
+
+          </div>
+
+
+          <!-- 4. CUSTOM TEST CASES SECTION (+ Add test case) -->
+          <div id="custom-testcases-card" class="bg-theme-surface border border-theme-subtle rounded-xl p-5 shadow-sm space-y-3">
+            
+            <div class="flex items-center justify-between pb-2 border-b border-theme-subtle">
+              <div class="flex items-center gap-2">
+                <i data-lucide="flask-conical" class="w-4 h-4 text-cyan-400"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-white font-display">Test Cases</h4>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button onclick="WorkspaceManager.addTestCase()" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                  <span>Add test case</span>
+                </button>
+                <button id="run-all-tests-btn" onclick="WorkspaceManager.runAllTestCases()" class="btn-secondary text-xs px-2.5 py-1 rounded-md text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.06] transition">
+                  Run All
+                </button>
+              </div>
+            </div>
+
+            <!-- Compact Test Case List -->
+            <div id="custom-testcases-list" class="space-y-2">
+              <!-- Dynamically populated test cases -->
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SETTINGS DRAWER (SLIDE-OVER PANEL) -->
+    <!-- ========================================================================= -->
+    <div id="settings-drawer-backdrop" onclick="WorkspaceManager.closeSettings()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition-opacity duration-200"></div>
+
+    <aside id="settings-drawer" class="fixed top-0 right-0 bottom-0 w-full max-w-md bg-[#090A12]/95 border-l border-white/[0.08] z-50 p-6 space-y-6 shadow-2xl backdrop-blur-xl transform translate-x-full transition-transform duration-300 overflow-y-auto">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+        <div class="flex items-center gap-2">
+          <i data-lucide="settings" class="w-4 h-4 text-cyan-400"></i>
+          <h3 class="text-sm font-bold text-white font-display">Workspace Settings</h3>
+        </div>
+        <button onclick="WorkspaceManager.closeSettings()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] text-lg font-bold transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Settings Content -->
+      <div class="space-y-5">
+        
+        <!-- Language -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-semibold text-slate-300 block">Target Language</label>
+          <div class="p-2.5 rounded-lg bg-theme-input border border-theme-subtle text-xs text-slate-300 flex items-center justify-between">
+            <span class="font-medium text-white">Python 3.12</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/25 text-cyan-300 font-mono font-medium">Default</span>
+          </div>
+        </div>
+
+        <!-- Model / Backend Info -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-semibold text-slate-300 block">Active Backend Engine</label>
+          <div class="p-3 rounded-lg bg-theme-input border border-theme-subtle space-y-1">
+            <div class="flex items-center justify-between">
+              <span id="settings-active-provider" class="text-xs font-bold text-white">Groq Cloud</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono">Connected</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Model: <span id="settings-active-model" class="font-mono text-cyan-400/90">qwen/qwen3.8-27b</span></p>
+          </div>
+        </div>
+
+        <!-- Orchestrator Mode (Clean Segmented Control) -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-semibold text-slate-300 block">Execution Mode</label>
+          <div class="grid grid-cols-2 gap-2 p-1 rounded-lg bg-theme-input border border-theme-subtle">
+            <button id="settings-mode-rl" onclick="WorkspaceManager.setMode('rl')" class="py-1.5 text-xs font-semibold rounded-md transition text-center active bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-[0_0_12px_rgba(0,212,255,0.35)]">
+              RL Orchestrator
+            </button>
+            <button id="settings-mode-baseline" onclick="WorkspaceManager.setMode('baseline')" class="py-1.5 text-xs font-semibold rounded-md transition text-center text-slate-400 hover:text-white">
+              Baseline Router
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1">RL uses a learned PPO policy to orchestrate specialized agents.</p>
+        </div>
+
+        <!-- Sandbox Settings -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-semibold text-slate-300 block">Execution Sandbox</label>
+          <div class="p-3 rounded-lg bg-theme-input border border-theme-subtle text-xs text-slate-300 space-y-1">
+            <div class="flex items-center justify-between">
+              <span>Isolated Subprocess Sandbox</span>
+              <span class="text-[10px] font-mono text-cyan-400/80">5.0s Timeout</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Executes custom inputs in an isolated Python environment.</p>
+          </div>
+        </div>
+
+        <!-- Developer / Advanced Options -->
+        <div class="pt-4 border-t border-white/[0.08] space-y-3">
+          <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Developer Diagnostics</label>
+          
+          <!-- Toggle: Show Quality Audit -->
+          <div class="p-3 rounded-lg bg-theme-input border border-theme-subtle space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-white">Quality Review Audit</span>
+              <button id="toggle-audit-btn" onclick="WorkspaceManager.toggleQualityAudit()" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 hover:underline">View</button>
+            </div>
+            <div id="settings-audit-details" class="hidden pt-2 border-t border-theme-subtle text-xs space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">Score:</span>
+                <span id="settings-audit-score" class="font-mono font-bold text-cyan-400">0.00 / 1.0</span>
+              </div>
+              <ul id="settings-audit-suggestions" class="space-y-1 text-slate-300 text-[11px] max-h-32 overflow-y-auto">
+                <li class="italic text-slate-400">Run synthesis to generate quality score.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Toggle: Show Execution Trace -->
+          <div class="p-3 rounded-lg bg-theme-input border border-theme-subtle space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-white">Multi-Agent Step Trace</span>
+              <button id="toggle-trace-btn" onclick="WorkspaceManager.toggleExecutionTrace()" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 hover:underline">View</button>
+            </div>
+            <div id="settings-trace-details" class="hidden pt-2 border-t border-theme-subtle text-xs space-y-2">
+              <div id="settings-trace-list" class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                <div class="text-[11px] text-slate-400 italic">No execution trace recorded.</div>
               </div>
             </div>
           </div>
 
-          <!-- Complete Test Code Suite -->
-          <div>
-            <div class="text-xs font-semibold text-oliveDark mb-1.5">Complete Unit Test Suite:</div>
-            <pre class="bg-[#242E21] p-3.5 rounded-xl text-xs font-mono text-[#D8E4D5] overflow-x-auto border border-sageBorder custom-scrollbar max-h-40" id="test-code-display"># Test code will appear here...</pre>
-          </div>
-
-          <!-- Sandbox Execution Log Output -->
-          <div>
-            <div class="text-xs font-semibold text-oliveDark mb-1.5">Sandbox Execution Log (Stdout):</div>
-            <pre class="bg-[#FAFCF9] p-2.5 rounded-xl text-xs font-mono text-mossText overflow-x-auto border border-sageBorder custom-scrollbar max-h-24" id="test-stdout-display">No stdout logs available.</pre>
-          </div>
-
-          <div id="test-stderr-box" class="hidden">
-            <div class="text-xs font-semibold text-red-700 mb-1.5">Sandbox Stderr / Traceback:</div>
-            <pre class="bg-red-50 p-2.5 rounded-xl text-xs font-mono text-red-700 overflow-x-auto border border-red-200 custom-scrollbar max-h-32" id="test-stderr-display"></pre>
-          </div>
-        </div>
-
-        <!-- Tab 4: Code Review Content -->
-        <div id="tab-content-review" class="p-6 flex-1 hidden space-y-4 bg-white">
-          <div class="flex items-center gap-4 p-4 rounded-xl editorial-panel-sage border border-sageBorder">
-            <div class="text-3xl font-serif font-bold text-oliveDark" id="review-score-gauge">0.0</div>
-            <div>
-              <div class="text-xs font-bold text-oliveDark">Quality Score Assessment</div>
-              <div class="text-[11px] text-olive/80">Evaluates algorithmic complexity, syntax standards, and robustness.</div>
-            </div>
-          </div>
-
-          <div>
-            <div class="text-xs font-semibold text-oliveDark mb-2">Reviewer Suggestions & Recommendations:</div>
-            <ul class="space-y-2 text-xs text-mossText" id="review-suggestions-list">
-              <li class="text-olive/70 italic">No review suggestions yet.</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Tab 5: RL Agent Trace Content -->
-        <div id="tab-content-trace" class="p-6 flex-1 hidden space-y-3 bg-white">
-          <div class="text-xs text-olive/80 mb-2 font-medium">Sequential Agent Decision Timeline:</div>
-          <div class="space-y-2" id="trace-timeline">
-            <div class="text-xs text-olive/70 italic">No steps recorded yet.</div>
-          </div>
         </div>
 
       </div>
 
+      <div class="pt-4 border-t border-white/[0.08]">
+        <button onclick="WorkspaceManager.closeSettings()" class="w-full btn-primary py-2 rounded-lg text-xs font-semibold shadow-[0_0_14px_rgba(0,212,255,0.3)]">
+          Done
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- Code Explanation Modal -->
+    <div id="code-explain-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+      <div class="bg-[#090A12]/95 border border-white/[0.08] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl backdrop-blur-xl relative">
+        <button onclick="WorkspaceManager.closeExplainModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg font-bold">×</button>
+        <div class="flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-4 h-4 text-cyan-400"></i>
+          <h3 class="text-sm font-bold text-white font-display">Code Explanation</h3>
+        </div>
+        <div id="explain-content" class="text-xs text-slate-300 space-y-2 leading-relaxed max-h-60 overflow-y-auto">
+          <!-- Explanation content -->
+        </div>
+        <button onclick="WorkspaceManager.closeExplainModal()" class="w-full btn-secondary text-xs py-2 rounded-lg text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/20 bg-white/[0.03] hover:bg-white/[0.08] transition">Close</button>
+      </div>
     </div>
-  </main>
 
-  <script>
-    let currentMode = 'rl';
-    let latestGeneratedCode = '';
+  </div>
 
-    const templates = {
-      is_palindrome: {
-        req: "Write a python function `is_palindrome(s: str) -> bool` that checks if a string is a palindrome, ignoring casing and non-alphanumeric characters.",
-        tests: "assert is_palindrome('A man, a plan, a canal: Panama') == True\nassert is_palindrome('race a car') == False\nassert is_palindrome('') == True\nassert is_palindrome('0P') == False",
-        playground: 'is_palindrome("Never odd or even")'
-      },
-      two_sum: {
-        req: "Write a python function `two_sum(nums: list[int], target: int) -> list[int]` that returns the 0-based indices of two numbers that add up to target.",
-        tests: "assert two_sum([2, 7, 11, 15], 9) == [0, 1]\nassert two_sum([3, 2, 4], 6) == [1, 2]\nassert two_sum([3, 3], 6) == [0, 1]",
-        playground: 'two_sum([2, 7, 11, 15], 9)'
-      },
-      is_prime: {
-        req: "Write a python function `is_prime(n: int) -> bool` that checks if an integer n is prime in O(sqrt(n)) time.",
-        tests: "assert is_prime(2) == True\nassert is_prime(7) == True\nassert is_prime(10) == False\nassert is_prime(1) == False\nassert is_prime(17) == True",
-        playground: 'is_prime(97)'
-      },
-      longest_consecutive: {
-        req: "Write a python function `longest_consecutive(nums: list[int]) -> int` that finds the length of longest consecutive elements sequence in O(n) time.",
-        tests: "assert longest_consecutive([100, 4, 200, 1, 3, 2]) == 4\nassert longest_consecutive([0, 3, 7, 2, 5, 8, 4, 6, 0, 1]) == 9\nassert longest_consecutive([]) == 0",
-        playground: 'longest_consecutive([100, 4, 200, 1, 3, 2])'
-      },
-      sum_of_digits: {
-        req: "Write a python function `sum_of_digits(n: int) -> int` that calculates the sum of digits of a given number.",
-        tests: "assert sum_of_digits(123) == 6\nassert sum_of_digits(0) == 0\nassert sum_of_digits(999) == 27\nassert sum_of_digits(-45) == 9",
-        playground: 'sum_of_digits(98765)'
-      },
-      power: {
-        req: "Write a python function `power(base: float, exp: int) -> float` that computes base raised to exponent.",
-        tests: "assert power(2, 3) == 8.0\nassert power(5, 0) == 1.0\nassert power(3, 4) == 81.0\nassert power(10, 2) == 100.0",
-        playground: 'power(2, 10)'
-      }
-    };
+  <!-- ========================================================================= -->
+  <!-- MODALS: LOGIN, REGISTER, BENCHMARKS -->
+  <!-- ========================================================================= -->
 
-    function setMode(mode) {
-      currentMode = mode;
-      const rlBtn = document.getElementById('mode-rl');
-      const baseBtn = document.getElementById('mode-baseline');
-      if (mode === 'rl') {
-        rlBtn.className = "px-3 py-1 rounded-full font-semibold transition bg-olive text-white shadow-sm";
-        baseBtn.className = "px-3 py-1 rounded-full font-medium transition text-mossText hover:text-oliveDark";
-      } else {
-        baseBtn.className = "px-3 py-1 rounded-full font-semibold transition bg-olive text-white shadow-sm";
-        rlBtn.className = "px-3 py-1 rounded-full font-medium transition text-mossText hover:text-oliveDark";
-      }
-    }
-
-    function setTemplate(key) {
-      if (templates[key]) {
-        document.getElementById('req-input').value = templates[key].req;
-        document.getElementById('custom-tests-input').value = templates[key].tests;
-        document.getElementById('playground-input').value = templates[key].playground || '';
-      }
-    }
-
-    function switchTab(tab) {
-      const tabs = ['code', 'playground', 'tests', 'review', 'trace'];
-      tabs.forEach(t => {
-        const btn = document.getElementById(`tab-btn-${t}`);
-        const content = document.getElementById(`tab-content-${t}`);
-        if (t === tab) {
-          btn.className = "px-3.5 py-2.5 text-xs font-semibold rounded-t-lg border-b-2 border-olive text-oliveDark flex items-center gap-1.5 transition";
-          content.classList.remove('hidden');
-        } else {
-          btn.className = "px-3.5 py-2.5 text-xs font-semibold rounded-t-lg border-b-2 border-transparent text-olive/70 hover:text-oliveDark flex items-center gap-1.5 transition";
-          content.classList.add('hidden');
-        }
-      });
-      lucide.createIcons();
-    }
-
-    function copyCode() {
-      const code = document.getElementById('code-display').innerText;
-      navigator.clipboard.writeText(code);
-      const copyBtn = document.getElementById('copy-btn');
-      copyBtn.innerHTML = '<i data-lucide="check" class="w-3 h-3 text-olive"></i><span class="text-olive">Copied!</span>';
-      lucide.createIcons();
-      setTimeout(() => {
-        copyBtn.innerHTML = '<i data-lucide="copy" class="w-3 h-3 text-olive"></i><span>Copy</span>';
-        lucide.createIcons();
-      }, 2000);
-    }
-
-    function resetAgentHighlights() {
-      document.querySelectorAll('#agent-nodes > div').forEach(node => {
-        node.classList.remove('agent-active');
-      });
-    }
-
-    function highlightAgent(agentName) {
-      const node = document.getElementById(`node-${agentName}`);
-      if (node) {
-        node.classList.add('agent-active');
-      }
-    }
-
-    async function executePipeline() {
-      const reqText = document.getElementById('req-input').value.trim();
-      const testCode = document.getElementById('custom-tests-input').value.trim();
-      const runBtn = document.getElementById('run-btn');
-
-      if (!reqText) {
-        alert("Please enter a software requirement!");
-        return;
-      }
-
-      runBtn.disabled = true;
-      runBtn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Orchestrating Agents...</span>';
-      lucide.createIcons();
-      resetAgentHighlights();
-
-      try {
-        const response = await fetch('/api/run', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            requirement: reqText,
-            test_code: testCode,
-            mode: currentMode
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(await response.text());
-        }
-
-        const data = await response.json();
-        latestGeneratedCode = data.code;
-        renderResults(data);
-
-        if (data.test_passed) {
-          confetti({
-            particleCount: 90,
-            spread: 75,
-            origin: { y: 0.6 },
-            colors: ['#4A5D44', '#9CB096', '#D8C7B5', '#B28266', '#E8EFE5']
-          });
-        }
-      } catch (err) {
-        alert(`Execution Error: ${err.message}`);
-      } finally {
-        runBtn.disabled = false;
-        runBtn.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i><span>Execute Multi-Agent System</span>';
-        lucide.createIcons();
-      }
-    }
-
-    async function runCustomInputLive() {
-      const code = latestGeneratedCode || document.getElementById('code-display').innerText;
-      const customInput = document.getElementById('playground-input').value.trim();
-      const btn = document.getElementById('playground-run-btn');
-
-      const outVal = document.getElementById('playground-output-val');
-      const errBox = document.getElementById('playground-err-box');
-      const errVal = document.getElementById('playground-err-val');
-      const stdoutBox = document.getElementById('playground-stdout-box');
-      const stdoutVal = document.getElementById('playground-stdout-val');
-
-      if (!customInput) {
-        errBox.classList.remove('hidden');
-        errVal.textContent = "Please enter an input argument or function call (e.g. is_palindrome('racecar')).";
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Running...</span>';
-      lucide.createIcons();
-      errBox.classList.add('hidden');
-      stdoutBox.classList.add('hidden');
-
-      try {
-        const response = await fetch('/api/run_custom_input', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            code: code,
-            custom_input: customInput
-          })
-        });
-
-        if (!response.ok) {
-          const errText = await response.text();
-          throw new Error(errText);
-        }
-
-        const res = await response.json();
-        
-        document.getElementById('playground-time').textContent = `${res.execution_time_ms} ms`;
-        
-        if (res.success) {
-          outVal.textContent = res.return_value !== null ? res.return_value : "(Function returned None)";
-          outVal.className = "p-3 rounded-lg bg-white border border-olive/30 text-sm font-mono font-bold text-oliveDark";
-        } else {
-          outVal.textContent = "Execution Failed";
-          outVal.className = "p-3 rounded-lg bg-red-50 border border-red-200 text-sm font-mono font-bold text-red-700";
-        }
-
-        if (res.stdout) {
-          stdoutBox.classList.remove('hidden');
-          stdoutVal.textContent = res.stdout;
-        }
-
-        if (res.error || res.stderr) {
-          errBox.classList.remove('hidden');
-          errVal.textContent = res.error || res.stderr;
-        }
-
-      } catch (err) {
-        outVal.textContent = "Execution Failed";
-        outVal.className = "p-3 rounded-lg bg-red-50 border border-red-200 text-sm font-mono font-bold text-red-700";
-        errBox.classList.remove('hidden');
-        errVal.textContent = err.message;
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i><span>Run Input</span>';
-        lucide.createIcons();
-      }
-    }
-
-    function renderResults(data) {
-      // 1. Code Display
-      const codeDisplay = document.getElementById('code-display');
-      codeDisplay.textContent = data.code || "# No code generated.";
-      hljs.highlightElement(codeDisplay);
-
-      // 2. Header Metrics
-      const metricStatus = document.getElementById('metric-status');
-      if (data.test_passed) {
-        metricStatus.innerHTML = '<span class="text-olive font-bold">ALL PASSED</span>';
-      } else {
-        metricStatus.innerHTML = `<span class="text-red-600 font-bold">FAILED (${data.error_type || 'Error'})</span>`;
-      }
-
-      document.getElementById('metric-tests-ratio').innerHTML = `<span class="${data.test_passed ? 'text-olive' : 'text-red-600'} font-bold">${data.passed_tests} / ${data.total_tests}</span>`;
-      document.getElementById('metric-score').innerHTML = `<span class="text-olive font-bold">${data.review_score.toFixed(2)} / 1.0</span>`;
-      document.getElementById('metric-reward').innerHTML = `<span class="text-oliveDark font-bold">${data.total_reward > 0 ? '+' : ''}${data.total_reward}</span>`;
-
-      // 3. Tests Tab Banner
-      const testBanner = document.getElementById('test-banner');
-      const testTitle = document.getElementById('test-summary-title');
-      const testDesc = document.getElementById('test-summary-desc');
-      const testIcon = document.getElementById('test-icon');
-
-      if (data.test_passed) {
-        testBanner.className = "p-4 rounded-xl border border-sageBorder editorial-panel-sage flex items-center gap-3";
-        testIcon.className = "w-9 h-9 rounded-full bg-white text-olive flex items-center justify-center border border-sageBorder shadow-sm";
-        testIcon.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i>';
-        testTitle.textContent = `All ${data.total_tests} Test Cases Passed (Verified Solution)`;
-        testDesc.textContent = `100% of unit assertions passed in the isolated Python execution sandbox.`;
-      } else {
-        testBanner.className = "p-4 rounded-xl border border-red-200 bg-red-50 flex items-center gap-3";
-        testIcon.className = "w-9 h-9 rounded-full bg-red-100 text-red-700 flex items-center justify-center border border-red-200 shadow-sm";
-        testIcon.innerHTML = '<i data-lucide="alert-triangle" class="w-5 h-5"></i>';
-        testTitle.textContent = `Tests Failed (${data.error_type || 'Execution Error'})`;
-        testDesc.textContent = `${data.failed_tests} out of ${data.total_tests} assertions failed during sandbox execution.`;
-      }
-
-      // 4. Individual Test Cases List Cards
-      const testCasesList = document.getElementById('test-cases-list');
-      const testCountBadge = document.getElementById('test-count-badge');
-      testCasesList.innerHTML = '';
-      testCountBadge.textContent = `${data.passed_tests}/${data.total_tests} passed`;
-
-      if (data.test_details && data.test_details.length > 0) {
-        data.test_details.forEach(t => {
-          const item = document.createElement('div');
-          item.className = `p-3 rounded-xl border flex items-center justify-between gap-3 text-xs ${t.passed ? 'bg-sageSurface/60 border-sageBorder' : 'bg-red-50/70 border-red-200'}`;
-          item.innerHTML = `
-            <div class="flex items-center gap-2.5 min-w-0">
-              <span class="p-1 rounded-full ${t.passed ? 'bg-white text-olive border border-sageBorder' : 'bg-red-100 text-red-700 border border-red-200'} shrink-0">
-                <i data-lucide="${t.passed ? 'check' : 'x'}" class="w-3.5 h-3.5"></i>
-              </span>
-              <span class="font-mono text-xs ${t.passed ? 'text-oliveDark' : 'text-red-700'} truncate">${t.assertion}</span>
-            </div>
-            <span class="text-[10px] uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full ${t.passed ? 'bg-white text-olive border border-sageBorder' : 'bg-red-100 text-red-700 border border-red-200'} shrink-0">
-              ${t.passed ? 'Passed' : 'Failed'}
-            </span>
-          `;
-          if (!t.passed && t.error) {
-            const errDiv = document.createElement('div');
-            errDiv.className = "text-[10px] text-red-700 font-mono mt-1 pl-7";
-            errDiv.textContent = t.error;
-            item.appendChild(errDiv);
-          }
-          testCasesList.appendChild(item);
-        });
-      } else {
-        testCasesList.innerHTML = `<div class="text-xs text-olive/70 p-3 rounded-lg bg-[#FAFCF9] border border-sageBorder">No individual assertions parsed.</div>`;
-      }
-
-      // 5. Complete Test Code Display
-      document.getElementById('test-code-display').textContent = data.test_code || "# No test code generated.";
-      document.getElementById('test-stdout-display').textContent = data.test_stdout || "No stdout captured.";
+  <!-- 1. LOGIN MODAL -->
+  <div id="auth-modal-login" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-theme-surface max-w-sm w-full p-6 space-y-4 border border-theme-subtle rounded-2xl shadow-2xl relative">
+      <button onclick="AuthManager.closeModals()" aria-label="Close login dialog" class="absolute top-4 right-4 text-theme-muted hover:text-theme-main text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-theme-secondary transition-colors">×</button>
       
-      const stderrBox = document.getElementById('test-stderr-box');
-      if (data.test_stderr) {
-        stderrBox.classList.remove('hidden');
-        document.getElementById('test-stderr-display').textContent = data.test_stderr;
-      } else {
-        stderrBox.classList.add('hidden');
-      }
+      <div class="text-center space-y-1">
+        <h3 class="text-lg font-bold text-theme-main font-display">Welcome Back</h3>
+        <p class="text-xs text-theme-secondary">Sign in to your Synthetix workspace</p>
+      </div>
 
-      // 6. Review Tab
-      document.getElementById('review-score-gauge').textContent = `${data.review_score.toFixed(2)}`;
-      const suggList = document.getElementById('review-suggestions-list');
-      suggList.innerHTML = '';
-      if (data.review_suggestions && data.review_suggestions.length > 0) {
-        data.review_suggestions.forEach(sug => {
-          const li = document.createElement('li');
-          li.className = "flex items-start gap-2 bg-sageSurface/50 p-3 rounded-lg border border-sageBorder";
-          li.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-olive shrink-0 mt-0.5"></i><span>${sug}</span>`;
-          suggList.appendChild(li);
-        });
-      } else {
-        suggList.innerHTML = '<li class="text-olive">Code satisfies all syntax standards and performance requirements with no warnings.</li>';
-      }
+      <div id="login-error" class="hidden p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-600 dark:text-rose-400 font-medium"></div>
 
-      // 7. Agent Trace & Node Highlights
-      resetAgentHighlights();
-      const timeline = document.getElementById('trace-timeline');
-      timeline.innerHTML = '';
-      data.steps.forEach((step, idx) => {
-        highlightAgent(step.agent);
-        const card = document.createElement('div');
-        card.className = "p-3 rounded-xl bg-sageSurface/40 border border-sageBorder flex items-center justify-between";
-        card.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="w-5 h-5 rounded-full bg-olive text-white font-bold text-[10px] flex items-center justify-center shadow-sm">${step.step}</span>
-            <span class="font-semibold text-xs text-oliveDark">${step.agent}</span>
+      <form id="login-form" class="space-y-3">
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-theme-main">Email Address</label>
+          <input id="login-email" type="email" required placeholder="developer@example.com" class="w-full workspace-input text-xs py-2.5 px-3 rounded-xl" />
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-theme-main">Password</label>
+            <a href="#" onclick="showToast('Password reset simulated!', 'info')" class="text-[11px] text-brand-purple hover:underline">Forgot?</a>
           </div>
-          <span class="text-xs font-mono font-semibold ${step.reward >= 0 ? 'text-olive' : 'text-red-600'}">${step.reward >= 0 ? '+' : ''}${step.reward}</span>
-        `;
-        timeline.appendChild(card);
-      });
+          <input id="login-password" type="password" required placeholder="••••••••" class="w-full workspace-input text-xs py-2.5 px-3 rounded-xl" />
+        </div>
 
-      lucide.createIcons();
-    }
+        <div class="flex items-center gap-2">
+          <input id="login-remember" type="checkbox" class="rounded border-theme-subtle bg-theme-input text-brand-purple focus:ring-brand-purple" checked />
+          <label for="login-remember" class="text-xs text-theme-secondary">Remember me</label>
+        </div>
 
-    // Initialize Lucide Icons & Highlight.js
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-      hljs.highlightAll();
-    });
-  </script>
+        <button type="submit" class="w-full btn-primary py-2.5 rounded-xl text-xs font-bold shadow-md">
+          Sign In
+        </button>
+      </form>
+
+      <p class="text-center text-xs text-theme-secondary">
+        Don't have an account? 
+        <button onclick="AuthManager.openRegisterModal()" class="text-brand-purple font-semibold hover:underline">Register</button>
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. REGISTER MODAL -->
+  <div id="auth-modal-register" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-theme-surface max-w-sm w-full p-6 space-y-4 border border-theme-subtle rounded-2xl shadow-2xl relative">
+      <button onclick="AuthManager.closeModals()" aria-label="Close register dialog" class="absolute top-4 right-4 text-theme-muted hover:text-theme-main text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-theme-secondary transition-colors">×</button>
+      
+      <div class="text-center space-y-1">
+        <h3 class="text-lg font-bold text-theme-main font-display">Create Account</h3>
+        <p class="text-xs text-theme-secondary">Get started with autonomous multi-agent coding</p>
+      </div>
+
+      <div id="register-error" class="hidden p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-600 dark:text-rose-400 font-medium"></div>
+
+      <form id="register-form" class="space-y-3">
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-theme-main">Full Name</label>
+          <input id="reg-name" type="text" required placeholder="Alex Mercer" class="w-full workspace-input text-xs py-2.5 px-3 rounded-xl" />
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-theme-main">Email Address</label>
+          <input id="reg-email" type="email" required placeholder="alex@developer.io" class="w-full workspace-input text-xs py-2.5 px-3 rounded-xl" />
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-theme-main">Password</label>
+          <input id="reg-password" type="password" required placeholder="Minimum 6 characters" class="w-full workspace-input text-xs py-2.5 px-3 rounded-xl" />
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-theme-main">Confirm Password</label>
+          <input id="reg-confirm-password" type="password" required placeholder="Re-enter password" class="w-full workspace-input text-xs py-2.5 px-3 rounded-xl" />
+        </div>
+
+        <button type="submit" class="w-full btn-primary py-2.5 rounded-xl text-xs font-bold shadow-md">
+          Create Free Account
+        </button>
+      </form>
+
+      <p class="text-center text-xs text-theme-secondary">
+        Already have an account? 
+        <button onclick="AuthManager.openLoginModal()" class="text-brand-purple font-semibold hover:underline">Sign In</button>
+      </p>
+    </div>
+  </div>
+
+  <!-- 3. BENCHMARK PROBLEMS MODAL (Required by tests: id="problem-modal") -->
+  <div id="problem-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-theme-surface max-w-2xl w-full p-6 space-y-4 border border-theme-subtle rounded-2xl shadow-2xl relative max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-theme-subtle">
+        <div>
+          <h3 class="text-base font-bold text-theme-main font-display">Benchmark Problem Library</h3>
+          <p class="text-xs text-theme-secondary mt-0.5">Select a benchmark challenge to load into the workspace.</p>
+        </div>
+        <button onclick="closeProblemModal()" aria-label="Close problems dialog" class="text-theme-muted hover:text-theme-main text-xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-theme-secondary transition-colors">×</button>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex flex-col sm:flex-row gap-2.5">
+        <div class="flex-1 relative">
+          <input id="modal-search-input" type="text" placeholder="Search benchmark problems..." class="w-full workspace-input text-xs py-2.5 px-3.5 rounded-xl" />
+        </div>
+        <select id="modal-difficulty-filter" class="workspace-input text-xs py-2.5 px-3 rounded-xl sm:w-36 font-medium">
+          <option value="All">All Levels</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </div>
+
+      <!-- Problem List -->
+      <div id="modal-problems-list" class="space-y-2.5 overflow-y-auto flex-1 pr-1 max-h-80">
+        <div class="text-center py-8 text-xs text-theme-muted italic">Loading benchmarks...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-auto"></div>
+
+  <!-- Modular Scripts -->
+  <script src="/static/js/shader.js"></script>
+  <script src="/static/js/agent-animation.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/auth.js"></script>
+  <script src="/static/js/landing.js"></script>
+  <script src="/static/js/workspace.js"></script>
+  <script src="/static/js/app.js?v=5"></script>
+
 </body>
 </html>

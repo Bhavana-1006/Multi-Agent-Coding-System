@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { background: #050508; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .logo-box { display: flex; align-items: center; gap: 10px; }
+  .text { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  .text-white { color: #ffffff; }
+  .text-cyan { color: #00F0FF; }
+</style>
+</head>
+<body>
+  <div class="logo-box">
+    <svg width="34" height="34" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.45));">
+      <defs>
+        <linearGradient id="agentForgeGrad" x1="4" y1="28" x2="26" y2="4" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#2563EB" />
+          <stop offset="45%" stop-color="#38BDF8" />
+          <stop offset="100%" stop-color="#00F0FF" />
+        </linearGradient>
+      </defs>
+      <!-- Stylized Outer Triangle/Chevron 'A' -->
+      <path d="M14.2 4.8C15.0 3.5 16.9 3.5 17.7 4.8L28.1 23.2C29.0 24.7 27.9 26.6 26.2 26.6H21.5C20.8 26.6 20.2 26.2 19.8 25.6L16 18.5L12.2 25.6C11.8 26.2 11.2 26.6 10.5 26.6H5.8C4.1 26.6 3.0 24.7 3.9 23.2L14.2 4.8Z" fill="url(#agentForgeGrad)"/>
+      <!-- Inner Arrowhead / Upward Peak -->
+      <path d="M16 20.5L19.2 26.6H12.8L16 20.5Z" fill="url(#agentForgeGrad)" opacity="0.85"/>
+      <!-- 4-point Sparkle Star -->
+      <path d="M26.5 2.5C26.5 4.5 27.2 5.5 29.5 5.5C27.2 5.5 26.5 6.5 26.5 8.5C26.5 6.5 25.8 5.5 23.5 5.5C25.8 5.5 26.5 4.5 26.5 2.5Z" fill="#00F0FF" style="filter: drop-shadow(0 0 4px #00F0FF);"/>
+    </svg>
+    <div class="text">
+      <span class="text-white">Agent</span><span class="text-cyan">Forge</span>
+    </div>
+  </div>
+</body>
+</html>

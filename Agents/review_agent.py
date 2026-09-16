@@ -45,6 +45,14 @@ Evaluate:
             system_prompt="You are a strict Senior Staff Code Reviewer and QA Engineer."
         )
         
+        # Ensure quality_score is normalized within 0.0 - 1.0 range
+        if review.quality_score > 1.0:
+            if review.quality_score <= 10.0:
+                review.quality_score = review.quality_score / 10.0
+            elif review.quality_score <= 100.0:
+                review.quality_score = review.quality_score / 100.0
+        review.quality_score = max(0.0, min(1.0, float(review.quality_score)))
+
         state.review_feedback = review
         state.action_history.append(self.name)
         state.step_count += 1

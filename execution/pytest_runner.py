@@ -5,9 +5,10 @@ import subprocess
 import re
 import json
 import time
+from typing import Optional
 from schemas.state import TestExecutionResult, TestCaseDetail
 
-def run_tests_in_sandbox(code: str, test_code: str, timeout: float = 5.0) -> TestExecutionResult:
+def run_tests_in_sandbox(code: str, test_code: str, timeout: float = 5.0, entry_point: Optional[str] = None) -> TestExecutionResult:
     """
     Executes generated code against unit test code in an isolated temporary environment.
     Safely evaluates individual assertions / test functions and captures stdout, stderr,
@@ -25,30 +26,32 @@ def run_tests_in_sandbox(code: str, test_code: str, timeout: float = 5.0) -> Tes
             error_type="EmptyCodeError"
         )
         
+    # Fast deterministic syntax pre-validation
+    try:
+        compile(code, "<string>", "exec")
+    except SyntaxError as e:
+        return TestExecutionResult(
+            passed=False,
+            total_tests=1,
+            passed_tests=0,
+            failed_tests=1,
+            test_details=[TestCaseDetail(name="Syntax Validation", assertion="compile(code)", passed=False, error=f"SyntaxError: {e}")],
+            stdout="",
+            stderr=f"SyntaxError on line {e.lineno}: {e.msg}\n  {e.text.strip() if e.text else ''}",
+            error_type="SyntaxError"
+        )
+
     if not test_code or not test_code.strip():
-        try:
-            compile(code, "<string>", "exec")
-            return TestExecutionResult(
-                passed=True,
-                total_tests=0,
-                passed_tests=0,
-                failed_tests=0,
-                test_details=[],
-                stdout="Syntax check passed (No unit tests specified).",
-                stderr="",
-                error_type=None
-            )
-        except SyntaxError as e:
-            return TestExecutionResult(
-                passed=False,
-                total_tests=0,
-                passed_tests=0,
-                failed_tests=1,
-                test_details=[],
-                stdout="",
-                stderr=f"SyntaxError: {e}",
-                error_type="SyntaxError"
-            )
+        return TestExecutionResult(
+            passed=True,
+            total_tests=0,
+            passed_tests=0,
+            failed_tests=0,
+            test_details=[],
+            stdout="Syntax check passed (No unit tests specified).",
+            stderr="",
+            error_type=None
+        )
 
     with tempfile.TemporaryDirectory() as tmpdir:
         solution_path = os.path.join(tmpdir, "solution.py")
@@ -62,11 +65,16 @@ def run_tests_in_sandbox(code: str, test_code: str, timeout: float = 5.0) -> Tes
         with open(spec_path, "w", encoding="utf-8") as f:
             f.write(test_code)
 
+        if entry_point:
+            with open(os.path.join(tmpdir, "entry_point.txt"), "w", encoding="utf-8") as ef:
+                ef.write(entry_point)
+
         # Build an isolated execution harness script
         harness_code = """
 import sys
 import os
 import json
+import ast
 import traceback
 
 results_path = "results.json"
@@ -78,6 +86,7 @@ with open(spec_path, "r", encoding="utf-8") as f:
 results = []
 
 try:
+    import solution
     from solution import *
 except Exception as e:
     tb = traceback.format_exc()
@@ -94,19 +103,137 @@ if "def test_" in raw_test_code:
     code_res = pytest.main(["test_spec.py", "-q"])
     with open(results_path, "w", encoding="utf-8") as f:
         json.dump({"pytest_mode": True, "passed": (code_res == 0), "tests": []}, f)
-else:
-    lines = [l for l in raw_test_code.splitlines() if l.strip() and not l.strip().startswith("#")]
-    for idx, line in enumerate(lines, 1):
-        test_info = {"name": f"Test #{idx}", "assertion": line, "passed": False, "error": None}
+elif "def check(" in raw_test_code:
+    cand_func = None
+    if os.path.exists("entry_point.txt"):
+        with open("entry_point.txt", "r", encoding="utf-8") as ep_f:
+            ep = ep_f.read().strip()
+            if ep and hasattr(solution, ep):
+                cand_func = getattr(solution, ep)
+
+    if cand_func is None:
         try:
-            exec(line, globals())
-            test_info["passed"] = True
-        except AssertionError:
-            test_info["error"] = "AssertionError: Condition evaluated to False"
-        except Exception as ex:
-            test_info["error"] = f"{type(ex).__name__}: {ex}"
-        results.append(test_info)
-        
+            with open("solution.py", "r", encoding="utf-8") as sf:
+                sol_ast = ast.parse(sf.read())
+            top_funcs = [n.name for n in sol_ast.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+            for fn_name in reversed(top_funcs):
+                if hasattr(solution, fn_name):
+                    cand_func = getattr(solution, fn_name)
+                    break
+        except Exception:
+            pass
+
+    if cand_func is None:
+        for attr_name in dir(solution):
+            val = getattr(solution, attr_name)
+            if callable(val) and getattr(val, '__module__', None) == 'solution':
+                cand_func = val
+                break
+    if cand_func is None:
+        cand_func = getattr(solution, 'solution', None)
+
+    test_globals = dict(globals())
+    for attr in dir(solution):
+        if not attr.startswith('__'):
+            test_globals[attr] = getattr(solution, attr)
+
+    exec(raw_test_code, test_globals)
+    check_fn = test_globals.get("check")
+
+    assert_nodes = []
+    try:
+        tree = ast.parse(raw_test_code)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Assert):
+                assert_nodes.append((node.lineno, ast.unparse(node).strip()))
+        assert_nodes.sort(key=lambda x: x[0])
+    except Exception:
+        pass
+
+    passed = False
+    err_msg = None
+    err_lineno = None
+    try:
+        if check_fn is not None:
+            check_fn(cand_func)
+            passed = True
+        else:
+            err_msg = "TestHarnessError: check function missing"
+    except AssertionError as ae:
+        tb = traceback.extract_tb(sys.exc_info()[2])
+        for frame in reversed(tb):
+            if frame.name == "check" or "test_harness" in frame.filename or frame.filename == "<string>":
+                err_lineno = frame.lineno
+                break
+        err_msg = f"AssertionError: {ae}" if str(ae) else "AssertionError: Condition evaluated to False"
+    except Exception as ex:
+        tb = traceback.extract_tb(sys.exc_info()[2])
+        for frame in reversed(tb):
+            if frame.name == "check" or "test_harness" in frame.filename or frame.filename == "<string>":
+                err_lineno = frame.lineno
+                break
+        err_msg = f"{type(ex).__name__}: {ex}"
+
+    if assert_nodes:
+        failed_found = False
+        for idx, (lno, text) in enumerate(assert_nodes, 1):
+            if passed:
+                results.append({"name": f"Test #{idx}", "assertion": text, "passed": True, "error": None})
+            else:
+                if not failed_found:
+                    if err_lineno is None or lno >= err_lineno:
+                        results.append({"name": f"Test #{idx}", "assertion": text, "passed": False, "error": err_msg})
+                        failed_found = True
+                    else:
+                        results.append({"name": f"Test #{idx}", "assertion": text, "passed": True, "error": None})
+                else:
+                    results.append({"name": f"Test #{idx}", "assertion": text, "passed": False, "error": "Skipped due to prior failure"})
+    else:
+        results.append({"name": "Test #1", "assertion": "check(candidate)", "passed": passed, "error": err_msg})
+
+    with open(results_path, "w", encoding="utf-8") as f:
+        json.dump({"pytest_mode": False, "tests": results}, f)
+else:
+    import ast
+    statements = None
+    try:
+        tree = ast.parse(raw_test_code)
+        statements = tree.body
+    except Exception:
+        statements = None
+
+    if statements:
+        test_idx = 1
+        for stmt in statements:
+            stmt_code = ast.unparse(stmt).strip()
+            is_assert = isinstance(stmt, ast.Assert)
+            try:
+                exec(stmt_code, globals())
+                if is_assert:
+                    results.append({"name": f"Test #{test_idx}", "assertion": stmt_code, "passed": True, "error": None})
+                    test_idx += 1
+            except AssertionError:
+                results.append({"name": f"Test #{test_idx}", "assertion": stmt_code, "passed": False, "error": "AssertionError: Condition evaluated to False"})
+                test_idx += 1
+            except Exception as ex:
+                results.append({"name": f"Test #{test_idx}", "assertion": stmt_code, "passed": False, "error": f"{type(ex).__name__}: {ex}"})
+                test_idx += 1
+    else:
+        lines = [l for l in raw_test_code.splitlines() if l.strip() and not l.strip().startswith("#")]
+        for idx, line in enumerate(lines, 1):
+            test_info = {"name": f"Test #{idx}", "assertion": line, "passed": False, "error": None}
+            try:
+                exec(line, globals())
+                test_info["passed"] = True
+            except AssertionError:
+                test_info["error"] = "AssertionError: Condition evaluated to False"
+            except Exception as ex:
+                test_info["error"] = f"{type(ex).__name__}: {ex}"
+            results.append(test_info)
+            
+    if not results:
+        results.append({"name": "Test #1", "assertion": "execution", "passed": True, "error": None})
+
     with open(results_path, "w", encoding="utf-8") as f:
         json.dump({"pytest_mode": False, "tests": results}, f)
 """
@@ -175,6 +302,9 @@ else:
                 if not all_passed:
                     first_err = next((t.error for t in test_details if not t.passed and t.error), "AssertionError")
                     error_type = first_err.split(":")[0]
+                    if not stderr:
+                        first_name = next((t.name for t in test_details if not t.passed and t.error), "Test")
+                        stderr = f"{first_name}: {first_err}"
                     
                 return TestExecutionResult(
                     passed=all_passed,

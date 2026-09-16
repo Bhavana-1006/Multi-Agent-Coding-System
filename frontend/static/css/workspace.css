@@ -1,0 +1,440 @@
+/**
+ * AgentForge - Multi-Agent Coding System
+ * Conversational Studio Workspace Stylesheet
+ * 
+ * Aesthetic:
+ * - Deep black / near-black foundation (#050508) with navy-blue undertones
+ * - Dark glass surfaces with soft vertical gradients and low-contrast borders
+ * - Electric cyan (#00F0FF, #38BDF8) & blue (#2563EB) as primary accents
+ * - Iris / purple (#6D6AFE) as secondary accent
+ * - Subtle ambient gradient lighting and luminous focus glows
+ */
+
+/* ========================================================================= */
+/* 0. AMBIENT BACKGROUND GLOW & MESH LIGHTING */
+/* ========================================================================= */
+.studio-ambient-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse 70% 45% at 50% -10%, rgba(0, 240, 255, 0.07), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 85% 25%, rgba(37, 99, 235, 0.05), transparent 60%),
+    radial-gradient(ellipse 45% 30% at 15% 65%, rgba(109, 106, 254, 0.04), transparent 60%);
+  z-index: 0;
+}
+
+/* ========================================================================= */
+/* 1. WORKSPACE HEADER & SUBNAV */
+/* ========================================================================= */
+.workspace-header {
+  background-color: rgba(5, 5, 8, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 1.5rem;
+  position: sticky;
+  top: 57px;
+  z-index: 30;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+/* ========================================================================= */
+/* 2. SIDEBAR & COLLAPSIBLE RECENT REQUESTS */
+/* ========================================================================= */
+.studio-sidebar {
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, transform 0.25s ease;
+}
+
+.studio-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: translateX(-20px);
+}
+
+.studio-sidebar-content {
+  background: linear-gradient(180deg, rgba(14, 16, 26, 0.8) 0%, rgba(9, 10, 18, 0.92) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.recent-request-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #94A3B8;
+  background-color: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.recent-request-item:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.recent-request-item.active {
+  background: linear-gradient(90deg, rgba(0, 240, 255, 0.12), rgba(37, 99, 235, 0.08));
+  border-color: rgba(0, 240, 255, 0.4);
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.15);
+}
+
+.recent-request-item .req-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.recent-request-item .delete-item-btn {
+  opacity: 0;
+  color: #64748B;
+  transition: opacity 0.15s ease, color 0.15s ease;
+  padding: 2px 4px;
+  font-size: 0.875rem;
+  line-height: 1;
+  border-radius: 0.25rem;
+}
+
+.recent-request-item:hover .delete-item-btn {
+  opacity: 1;
+}
+
+.recent-request-item .delete-item-btn:hover {
+  color: #F87171;
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+/* ========================================================================= */
+/* 3. INITIAL / EMPTY STATE (WHAT DO YOU WANT TO BUILD?) */
+/* ========================================================================= */
+.empty-state-container {
+  animation: workspace-fade-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.empty-input-card {
+  background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(9, 10, 18, 0.94) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.25rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.empty-input-card:focus-within {
+  border-color: rgba(0, 240, 255, 0.5);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.18), 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+/* Coding requirement textarea */
+#req-input-empty {
+  color: #FFFFFF !important;
+  caret-color: #00F0FF !important;
+}
+
+#req-input-empty::placeholder {
+  color: #64748B !important;
+}
+
+/* ========================================================================= */
+/* 4. ACTIVE CONVERSATIONAL WORKSPACE */
+/* ========================================================================= */
+#studio-active-state {
+  animation: workspace-fade-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Requirement Bubble Card */
+#req-bubble-card {
+  background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(9, 10, 18, 0.94) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#req-bubble-card:hover {
+  border-color: rgba(0, 240, 255, 0.3);
+}
+
+/* Code Editor Card */
+#code-editor-card {
+  background: #090A10;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.05);
+  transition: border-color 0.2s ease;
+}
+
+.code-editor-header {
+  background: rgba(14, 16, 26, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.code-editor-pre {
+  background-color: #06070C !important;
+  color: #E2E8F0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  max-height: 540px;
+  overflow-y: auto;
+}
+
+.code-editor-pre code {
+  background: transparent !important;
+  font-family: inherit;
+}
+
+/* Custom Input / Output Card */
+#custom-input-card {
+  background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(9, 10, 18, 0.94) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.2s ease;
+}
+
+.workspace-input {
+  background-color: #06070C !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #FFFFFF !important;
+  caret-color: #00F0FF !important;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  border-radius: 0.625rem;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.workspace-input::placeholder {
+  color: #64748B !important;
+}
+
+.workspace-input:focus {
+  outline: none;
+  border-color: rgba(0, 240, 255, 0.5) !important;
+  box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.18) !important;
+}
+
+/* Dropdown select element styling */
+select.workspace-input {
+  background-color: #06070C !important;
+  color: #FFFFFF !important;
+  cursor: pointer;
+}
+
+select.workspace-input option {
+  background-color: #0A0B12 !important;
+  color: #FFFFFF !important;
+}
+
+.workspace-textarea {
+  background-color: #06070C !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #FFFFFF !important;
+  caret-color: #00F0FF !important;
+  border-radius: 0.625rem;
+  padding: 0.75rem 0.875rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.workspace-textarea::placeholder {
+  color: #64748B !important;
+}
+
+.workspace-textarea:focus {
+  outline: none;
+  border-color: rgba(0, 240, 255, 0.5) !important;
+  box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.18) !important;
+}
+
+/* Output Display Box */
+.output-display-box {
+  background-color: #06070C !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 0.625rem;
+  color: #94A3B8;
+  transition: all 0.2s ease;
+}
+
+.output-display-box.output-success {
+  background-color: rgba(16, 185, 129, 0.08) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  color: #34D399 !important;
+}
+
+.output-display-box.output-error {
+  background-color: rgba(239, 68, 68, 0.08) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  color: #F87171 !important;
+}
+
+/* ========================================================================= */
+/* 5. TEST CASES MANAGER */
+/* ========================================================================= */
+#custom-testcases-card {
+  background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(9, 10, 18, 0.94) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.2s ease;
+}
+
+.testcase-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  background-color: #06070C;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.5rem;
+  transition: border-color 0.18s ease;
+}
+
+.testcase-row:hover {
+  border-color: rgba(0, 240, 255, 0.25);
+}
+
+.testcase-row.status-passed {
+  border-left: 3px solid #10B981 !important;
+}
+
+.testcase-row.status-failed {
+  border-left: 3px solid #EF4444 !important;
+}
+
+.testcase-input-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.testcase-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #FFFFFF;
+  caret-color: #00F0FF;
+  padding: 0.25rem 0;
+}
+
+.testcase-input:focus {
+  outline: none;
+}
+
+.testcase-output-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.375rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94A3B8;
+  white-space: nowrap;
+}
+
+/* ========================================================================= */
+/* 6. SETTINGS SLIDE-OVER DRAWER */
+/* ========================================================================= */
+#settings-drawer {
+  background: rgba(8, 9, 16, 0.96) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: transform 0.3s ease;
+}
+
+#settings-drawer.drawer-open {
+  transform: translateX(0);
+}
+
+#settings-drawer-backdrop {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+#settings-drawer-backdrop.backdrop-open {
+  opacity: 1;
+  pointer-events: auto;
+  display: block !important;
+}
+
+/* ========================================================================= */
+/* 7. ANIMATIONS */
+/* ========================================================================= */
+@keyframes workspace-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: workspace-fade-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Terminal box */
+.terminal-box {
+  background-color: #06070C !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  padding: 0.75rem 1rem;
+  color: #CBD5E1 !important;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+/* ========================================================================= */
+/* 8. RESPONSIVE BREAKPOINTS */
+/* ========================================================================= */
+@media (max-width: 768px) {
+  .workspace-header {
+    padding: 0.625rem 1rem;
+  }
+  
+  .code-editor-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

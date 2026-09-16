@@ -7,7 +7,7 @@ An autonomous Multi-Agent Software Development system that dynamically orchestra
 ## 🌟 Key Features
 
 1. **Reinforcement Learning Orchestrator (PPO)**:
-   - Uses a continuous 12-dimensional observation vector and 8 discrete action spaces.
+   - Uses a continuous 15-dimensional observation vector and 8 discrete action spaces.
    - Learns optimal, minimal-cost agent dispatch paths rather than fixed sequential pipelines.
    - Enforces strict **Action Masking** to eliminate infinite loops and illegal transitions.
 
@@ -22,14 +22,15 @@ An autonomous Multi-Agent Software Development system that dynamically orchestra
    - `SelfRepairAgent`: Autonomous bug patcher.
 
 3. **Multi-Provider LLM Engine**:
-   - **Groq Cloud (14,400 Free Requests/Day)**: Fast inference with `qwen/qwen3.6-27b`.
+   - **Groq Cloud (14,400 Free Requests/Day)**: Fast inference with `qwen/qwen3.8-27b`.
    - **Google Gemini & OpenAI**: Direct cloud model support.
    - **Local Ollama**: 100% offline, unlimited local execution.
    - **Adaptive Offline Engine**: Instant zero-cost fallback for offline environments.
 
-4. **Modern Interactive Web UI**:
-   - Sleek dark-mode glassmorphic interface with animated agent execution flow.
-   - Live Python syntax highlighting, unit test sandbox terminal, review score meter, and step-by-step reward timelines.
+4. **Modern Developer-Focused Web UI**:
+   - Sophisticated plum (`#17121C`), purple (`#9B5DE5`), and coral (`#FF6B6B`) aesthetic with modular styling.
+   - User-first landing page with interactive coding prompt, visual workflow stepper, and mock workspace preview.
+   - Studio Workspace featuring live Server-Sent Events (SSE) streaming, syntax-highlighted editor, subprocess sandbox test runner, quality review meter, and custom input playground.
 
 ---
 

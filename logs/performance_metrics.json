@@ -1,0 +1,3816 @@
+{
+  "dataset_metrics": {
+    "total_problems": 229,
+    "train_count": 160,
+    "val_count": 35,
+    "test_count": 34,
+    "full_stats": {
+      "total": 229,
+      "categories": {
+        "Math": 101,
+        "Data Structures": 16,
+        "Arrays": 29,
+        "Strings": 35,
+        "Searching & Sorting": 21,
+        "Trees & Graphs": 10,
+        "Dynamic Programming": 11,
+        "Recursion": 6
+      },
+      "difficulties": {
+        "Medium": 94,
+        "Easy": 122,
+        "Hard": 13
+      },
+      "sources": {
+        "HumanEval": 164,
+        "Custom": 65
+      },
+      "buggy_solutions_count": 95
+    },
+    "train_stats": {
+      "total": 160,
+      "categories": {
+        "Strings": 30,
+        "Arrays": 25,
+        "Math": 63,
+        "Searching & Sorting": 18,
+        "Data Structures": 11,
+        "Dynamic Programming": 4,
+        "Trees & Graphs": 4,
+        "Recursion": 5
+      },
+      "difficulties": {
+        "Easy": 85,
+        "Hard": 9,
+        "Medium": 66
+      },
+      "sources": {
+        "Custom": 45,
+        "HumanEval": 115
+      },
+      "buggy_solutions_count": 75
+    },
+    "val_stats": {
+      "total": 35,
+      "categories": {
+        "Data Structures": 3,
+        "Recursion": 1,
+        "Trees & Graphs": 5,
+        "Dynamic Programming": 3,
+        "Math": 19,
+        "Arrays": 2,
+        "Strings": 2
+      },
+      "difficulties": {
+        "Easy": 18,
+        "Hard": 2,
+        "Medium": 15
+      },
+      "sources": {
+        "Custom": 10,
+        "HumanEval": 25
+      },
+      "buggy_solutions_count": 10
+    },
+    "test_stats": {
+      "total": 34,
+      "categories": {
+        "Math": 19,
+        "Dynamic Programming": 4,
+        "Data Structures": 2,
+        "Searching & Sorting": 3,
+        "Arrays": 2,
+        "Trees & Graphs": 1,
+        "Strings": 3
+      },
+      "difficulties": {
+        "Easy": 19,
+        "Hard": 2,
+        "Medium": 13
+      },
+      "sources": {
+        "Custom": 10,
+        "HumanEval": 24
+      },
+      "buggy_solutions_count": 10
+    }
+  },
+  "simulated_rl_metrics": {
+    "accuracy_pct": 94.75982532751091,
+    "total_evaluated": 229,
+    "passed_count": 217,
+    "mean_steps": 5.152838427947598,
+    "mean_reward": 23.494759825327506,
+    "difficulty_breakdown": {
+      "Easy": {
+        "total": 122,
+        "passed": 117,
+        "accuracy_pct": 95.90163934426229,
+        "mean_steps": 5.008196721311475,
+        "mean_reward": 23.591803278688527
+      },
+      "Medium": {
+        "total": 94,
+        "passed": 88,
+        "accuracy_pct": 93.61702127659575,
+        "mean_steps": 5.276595744680851,
+        "mean_reward": 23.378723404255318
+      },
+      "Hard": {
+        "total": 13,
+        "passed": 12,
+        "accuracy_pct": 92.3076923076923,
+        "mean_steps": 5.615384615384615,
+        "mean_reward": 23.423076923076923
+      }
+    },
+    "category_breakdown": {
+      "Arrays": {
+        "total": 29,
+        "passed": 27,
+        "accuracy_pct": 93.10344827586206,
+        "mean_steps": 5.0344827586206895
+      },
+      "Data Structures": {
+        "total": 16,
+        "passed": 15,
+        "accuracy_pct": 93.75,
+        "mean_steps": 5.5
+      },
+      "Dynamic Programming": {
+        "total": 11,
+        "passed": 11,
+        "accuracy_pct": 100.0,
+        "mean_steps": 4.818181818181818
+      },
+      "Math": {
+        "total": 101,
+        "passed": 97,
+        "accuracy_pct": 96.03960396039604,
+        "mean_steps": 5.188118811881188
+      },
+      "Recursion": {
+        "total": 6,
+        "passed": 6,
+        "accuracy_pct": 100.0,
+        "mean_steps": 5.5
+      },
+      "Searching & Sorting": {
+        "total": 21,
+        "passed": 20,
+        "accuracy_pct": 95.23809523809523,
+        "mean_steps": 5.285714285714286
+      },
+      "Strings": {
+        "total": 35,
+        "passed": 31,
+        "accuracy_pct": 88.57142857142857,
+        "mean_steps": 4.857142857142857
+      },
+      "Trees & Graphs": {
+        "total": 10,
+        "passed": 10,
+        "accuracy_pct": 100.0,
+        "mean_steps": 5.5
+      }
+    },
+    "results": [
+      {
+        "id": "HumanEval_0",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_1",
+        "difficulty": "Medium",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_2",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_3",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_4",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_5",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_6",
+        "difficulty": "Medium",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_7",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_8",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_9",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_10",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_11",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_12",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_13",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_14",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_15",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_16",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_17",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_18",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_19",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_20",
+        "difficulty": "Hard",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_21",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_22",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_23",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_24",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_25",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_26",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_27",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_28",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_29",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "HumanEval_30",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_31",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_32",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_33",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_34",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_35",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_36",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_37",
+        "difficulty": "Medium",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_38",
+        "difficulty": "Easy",
+        "category": "Trees & Graphs",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_39",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_40",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_41",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_42",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_43",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_44",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_45",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_46",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_47",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_48",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_49",
+        "difficulty": "Easy",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_50",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_51",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_52",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_53",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_54",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_55",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_56",
+        "difficulty": "Medium",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_57",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_58",
+        "difficulty": "Medium",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_59",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_60",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_61",
+        "difficulty": "Medium",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_62",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_63",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_64",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_65",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_66",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_67",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_68",
+        "difficulty": "Easy",
+        "category": "Trees & Graphs",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_69",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_70",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_71",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_72",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_73",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_74",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_75",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_76",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_77",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_78",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_79",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_80",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_81",
+        "difficulty": "Hard",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_82",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_83",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_84",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_85",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_86",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_87",
+        "difficulty": "Hard",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_88",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "HumanEval_89",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_90",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_91",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_92",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_93",
+        "difficulty": "Easy",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_94",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_95",
+        "difficulty": "Hard",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_96",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_97",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_98",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_99",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_100",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_101",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_102",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_103",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_104",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_105",
+        "difficulty": "Hard",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_106",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "HumanEval_107",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_108",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_109",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_110",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_111",
+        "difficulty": "Medium",
+        "category": "Data Structures",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "HumanEval_112",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_113",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_114",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_115",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_116",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_117",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_118",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_119",
+        "difficulty": "Medium",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_120",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_121",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "HumanEval_122",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_123",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_124",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_125",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_126",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_127",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_128",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_129",
+        "difficulty": "Hard",
+        "category": "Trees & Graphs",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_130",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_131",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "HumanEval_132",
+        "difficulty": "Medium",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_133",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_134",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_135",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_136",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_137",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_138",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_139",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_140",
+        "difficulty": "Hard",
+        "category": "Strings",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "HumanEval_141",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_142",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_143",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "HumanEval_144",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_145",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_146",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_147",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_148",
+        "difficulty": "Medium",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_149",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_150",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_151",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_152",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_153",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_154",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_155",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_156",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_157",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_158",
+        "difficulty": "Easy",
+        "category": "Trees & Graphs",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_159",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_160",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_161",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_162",
+        "difficulty": "Easy",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "HumanEval_163",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_001",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_002",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "CUSTOM_003",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_004",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_005",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_006",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_007",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_008",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_009",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "CUSTOM_010",
+        "difficulty": "Hard",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_011",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_012",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "CUSTOM_013",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_014",
+        "difficulty": "Easy",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_015",
+        "difficulty": "Medium",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_016",
+        "difficulty": "Hard",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_017",
+        "difficulty": "Easy",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_018",
+        "difficulty": "Medium",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_019",
+        "difficulty": "Easy",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_020",
+        "difficulty": "Hard",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_021",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_022",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_023",
+        "difficulty": "Easy",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_024",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_025",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_026",
+        "difficulty": "Medium",
+        "category": "Arrays",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_027",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_028",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_029",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_030",
+        "difficulty": "Medium",
+        "category": "Strings",
+        "passed": false,
+        "steps": 7,
+        "reward": 6.300000000000001,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent"
+        ]
+      },
+      {
+        "id": "CUSTOM_031",
+        "difficulty": "Easy",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_032",
+        "difficulty": "Hard",
+        "category": "Strings",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_033",
+        "difficulty": "Medium",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_034",
+        "difficulty": "Medium",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_035",
+        "difficulty": "Medium",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_036",
+        "difficulty": "Medium",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_037",
+        "difficulty": "Medium",
+        "category": "Searching & Sorting",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_038",
+        "difficulty": "Medium",
+        "category": "Recursion",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_039",
+        "difficulty": "Medium",
+        "category": "Recursion",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_040",
+        "difficulty": "Medium",
+        "category": "Recursion",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_041",
+        "difficulty": "Medium",
+        "category": "Recursion",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_042",
+        "difficulty": "Medium",
+        "category": "Recursion",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_043",
+        "difficulty": "Hard",
+        "category": "Recursion",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_044",
+        "difficulty": "Medium",
+        "category": "Trees & Graphs",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_045",
+        "difficulty": "Easy",
+        "category": "Trees & Graphs",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_046",
+        "difficulty": "Medium",
+        "category": "Trees & Graphs",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_047",
+        "difficulty": "Medium",
+        "category": "Trees & Graphs",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_048",
+        "difficulty": "Easy",
+        "category": "Trees & Graphs",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_049",
+        "difficulty": "Medium",
+        "category": "Trees & Graphs",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_050",
+        "difficulty": "Medium",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_051",
+        "difficulty": "Medium",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_052",
+        "difficulty": "Medium",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_053",
+        "difficulty": "Medium",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_054",
+        "difficulty": "Hard",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_055",
+        "difficulty": "Medium",
+        "category": "Dynamic Programming",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_056",
+        "difficulty": "Medium",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_057",
+        "difficulty": "Easy",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_058",
+        "difficulty": "Easy",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_059",
+        "difficulty": "Easy",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 7,
+        "reward": 26.200000000000003,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ErrorAnalysisAgent",
+          "SelfRepairAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_060",
+        "difficulty": "Easy",
+        "category": "Data Structures",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_061",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_062",
+        "difficulty": "Medium",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_063",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_064",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      },
+      {
+        "id": "CUSTOM_065",
+        "difficulty": "Easy",
+        "category": "Math",
+        "passed": true,
+        "steps": 4,
+        "reward": 23.5,
+        "trajectory": [
+          "CodingAgent",
+          "TestingAgent",
+          "ReviewAgent",
+          "Terminate"
+        ]
+      }
+    ]
+  },
+  "live_metrics": {
+    "baseline": {
+      "accuracy_pct": 100.0,
+      "mean_steps": 6.0,
+      "mean_time_seconds": 54.63207221031189,
+      "mean_quality_score": 0.975,
+      "assertions_passed": 16,
+      "assertions_total": 16,
+      "assertion_pass_rate_pct": 100.0,
+      "records": [
+        {
+          "id": "CUSTOM_061",
+          "difficulty": "Easy",
+          "passed": true,
+          "steps": 6,
+          "time_seconds": 17.297215461730957,
+          "passed_assertions": 4,
+          "total_assertions": 4,
+          "quality_score": 0.95,
+          "actions": [
+            "RequirementAnalyzer",
+            "PlanningAgent",
+            "RetrievalAgent",
+            "CodingAgent",
+            "ReviewAgent",
+            "TestingAgent"
+          ]
+        },
+        {
+          "id": "CUSTOM_052",
+          "difficulty": "Medium",
+          "passed": true,
+          "steps": 6,
+          "time_seconds": 70.96731853485107,
+          "passed_assertions": 4,
+          "total_assertions": 4,
+          "quality_score": 0.95,
+          "actions": [
+            "RequirementAnalyzer",
+            "PlanningAgent",
+            "RetrievalAgent",
+            "CodingAgent",
+            "ReviewAgent",
+            "TestingAgent"
+          ]
+        },
+        {
+          "id": "CUSTOM_053",
+          "difficulty": "Medium",
+          "passed": true,
+          "steps": 6,
+          "time_seconds": 55.549556493759155,
+          "passed_assertions": 4,
+          "total_assertions": 4,
+          "quality_score": 1.0,
+          "actions": [
+            "RequirementAnalyzer",
+            "PlanningAgent",
+            "RetrievalAgent",
+            "CodingAgent",
+            "ReviewAgent",
+            "TestingAgent"
+          ]
+        },
+        {
+          "id": "CUSTOM_054",
+          "difficulty": "Hard",
+          "passed": true,
+          "steps": 6,
+          "time_seconds": 74.71419835090637,
+          "passed_assertions": 4,
+          "total_assertions": 4,
+          "quality_score": 1.0,
+          "actions": [
+            "RequirementAnalyzer",
+            "PlanningAgent",
+            "RetrievalAgent",
+            "CodingAgent",
+            "ReviewAgent",
+            "TestingAgent"
+          ]
+        }
+      ]
+    },
+    "rl_orchestrator": {
+      "accuracy_pct": 100.0,
+      "mean_steps": 4.0,
+      "mean_time_seconds": 49.207053542137146,
+      "mean_quality_score": 0.9624999999999999,
+      "assertions_passed": 16,
+      "assertions_total": 16,
+      "assertion_pass_rate_pct": 100.0,
+      "records": [
+        {
+          "id": "CUSTOM_061",
+          "difficulty": "Easy",
+          "passed": true,
+          "steps": 4,
+          "time_seconds": 37.337334871292114,
+          "reward": 17.6,
+          "passed_assertions": 4,
+          "total_assertions": 4,
+          "quality_score": 0.95,
+          "trajectory": [
+            "CodingAgent",
+            "ReviewAgent",
+            "Terminate"
+          ]
+        },
+        {
+          "id": "CUSTOM_052",
+          "difficulty": "Medium",
+          "passed": true,
+          "steps": 4,
+          "time_seconds": 42.46825838088989,
+          "reward": 17.6,
+          "passed_assertions": 4,
+          "total_assertions": 4,
+          "quality_score": 0.95,
+          "trajectory": [
+            "CodingAgent",
+            "ReviewAgent",
+            "Terminate"
+          ]
+        },
+        {
+          "id": "CUSTOM_053",
+          "difficulty": "Medium",
+          "passed": true,
+          "steps": 4,
+          "time_seconds": 48.433690547943115,
+          "reward": 17.6,
+          "passed_assertions": 4,
+          "total_assertions": 4,
+          "quality_score": 0.95,
+          "trajectory": [
+            "CodingAgent",
+            "ReviewAgent",
+            "Terminate"
+          ]
+        },
+        {
+          "id": "CUSTOM_054",
+          "difficulty": "Hard",
+          "passed": true,
+          "steps": 4,
+          "time_seconds": 68.58893036842346,
+          "reward": 17.7,
+          "passed_assertions": 4,
+          "total_assertions": 4,
+          "quality_score": 1.0,
+          "trajectory": [
+            "CodingAgent",
+            "ReviewAgent",
+            "Terminate"
+          ]
+        }
+      ]
+    },
+    "comparison": {
+      "step_reduction_pct": 33.33333333333333,
+      "latency_reduction_pct": 9.930098655768658,
+      "speedup_factor": 1.110248801292871
+    }
+  },
+  "timestamp": "2026-09-12 00:13:00"
+}

@@ -1,0 +1,312 @@
+/**
+ * Synthetix - Multi-Agent Coding System
+ * Modern, Smooth & Restrained Animations Stylesheet
+ * 
+ * Features:
+ * - Scroll-triggered entrance animations (fade up, slide in)
+ * - Animated code synthesis typewriter & blinking cursor
+ * - Subtle hover elevations & micro-interactions
+ * - Status pulse & verification highlights
+ * - Reduced motion support
+ */
+
+/* 1. Scroll-Triggered Reveals */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.reveal-left {
+  transform: translateX(-24px);
+}
+
+.reveal-on-scroll.reveal-right {
+  transform: translateX(24px);
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* Staggered transition delays */
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+
+/* 2. Interactive Typing Cursor */
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  background-color: var(--primary);
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  animation: blink-cursor 0.9s infinite;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* 3. Code Generation Shimmer & Fade */
+.code-fade-in {
+  animation: code-appear 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes code-appear {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 4. Verification Check Pulse */
+.verify-pulse {
+  animation: verify-glow 1.8s infinite alternate ease-in-out;
+}
+
+@keyframes verify-glow {
+  0% {
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+    border-color: rgba(16, 185, 129, 0.6);
+  }
+}
+
+/* 5. Subtle Hover Elevations */
+.hover-lift {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(30, 33, 64, 0.10);
+  border-color: rgba(109, 106, 254, 0.4);
+}
+
+/* 6. Active Workflow Stage Step Glow */
+.workflow-step {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.workflow-step:hover {
+  transform: translateY(-2px);
+  border-color: rgba(109, 106, 254, 0.45);
+}
+
+.workflow-step::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: var(--primary);
+  opacity: 0;
+  transform: scaleX(0.5);
+  transition: all 0.25s ease;
+}
+
+.workflow-step:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* 7. Button Hover Dynamics */
+.btn-primary, .btn-secondary {
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 18px rgba(109, 106, 254, 0.32);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1.5px);
+}
+
+.btn-primary:active, .btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* 8. Toast Slide In */
+@keyframes toast-enter {
+  from {
+    transform: translateY(16px) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.toast-enter {
+  animation: toast-enter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 9. Floating Agent Badges & Orbit Keyframes */
+@keyframes float-badge-slow-1 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-7px) rotate(0.5deg); }
+}
+
+@keyframes float-badge-slow-2 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(8px) rotate(-0.5deg); }
+}
+
+@keyframes float-badge-slow-3 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(0.5deg); }
+}
+
+@keyframes float-badge-slow-4 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(7px) rotate(-0.5deg); }
+}
+
+.animate-float-1 { animation: float-badge-slow-1 4.5s ease-in-out infinite; }
+.animate-float-2 { animation: float-badge-slow-2 5.2s ease-in-out infinite 0.4s; }
+.animate-float-3 { animation: float-badge-slow-3 4.8s ease-in-out infinite 0.8s; }
+.animate-float-4 { animation: float-badge-slow-4 5.5s ease-in-out infinite 1.2s; }
+
+@keyframes spin-slow-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-orbit {
+  animation: spin-slow-orbit 28s linear infinite;
+}
+
+/* 11. Hero Headline Gradient Sheen (single signature moment) */
+.headline-sheen {
+  background: linear-gradient(100deg, #6D6AFE 0%, #8B85FF 30%, #5852E8 55%, #6D6AFE 80%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sheen-drift 7s ease-in-out infinite;
+}
+
+@keyframes sheen-drift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* 12. Soft Card Entrance Glow (used once per view, on primary CTA) */
+@keyframes cta-glow-pulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(109, 106, 254, 0.35); }
+  50% { box-shadow: 0 4px 22px rgba(109, 106, 254, 0.55); }
+}
+.cta-glow {
+  animation: cta-glow-pulse 3.2s ease-in-out infinite;
+}
+
+/* 13. Underline Draw for Active Nav Item */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* 14. Agent Collaboration & Terminal Dynamics */
+.editor-line {
+  animation: editor-line-reveal 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes editor-line-reveal {
+  from {
+    opacity: 0;
+    transform: translateX(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.agent-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+}
+
+@keyframes conduit-stream {
+  0% { transform: scaleX(0.85); opacity: 0.5; }
+  50% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(0.85); opacity: 0.5; }
+}
+
+.conduit-line {
+  animation: conduit-stream 2.5s ease-in-out infinite;
+}
+
+/* 10. Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  .typing-cursor {
+    animation: none !important;
+  }
+
+  .headline-sheen {
+    animation: none !important;
+    background-position: 0% 50%;
+  }
+
+  .cta-glow {
+    animation: none !important;
+  }
+
+  .editor-line {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+

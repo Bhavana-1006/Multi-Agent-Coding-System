@@ -32,7 +32,8 @@ class LLMClient:
                     api_key=self.groq_key,
                     base_url="https://api.groq.com/openai/v1"
                 )
-                print("[LLM] Initialized Free Groq Cloud Provider (qwen/qwen3.6-27b)")
+                self.groq_model = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
+                print(f"[LLM] Initialized Free Groq Cloud Provider ({self.groq_model})")
             except Exception as e:
                 print(f"[Warning] Failed to initialize Groq Client: {e}")
 
@@ -95,10 +96,19 @@ class LLMClient:
         system_prompt: Optional[str] = None,
         model: Optional[str] = None,
         temperature: float = 0.2,
+        max_tokens: int = 4096,
         max_retries: int = 2
     ) -> str:
         # 1. Try Groq (Primary Free Engine)
         if self.groq_client:
+            chosen_model = model or getattr(self, "groq_model", os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b"))
+            # Auto-replace decommissioned or outdated models
+            if chosen_model in ("qwen-2.5-coder-32b", "llama-3.1-70b-versatile", "llama-3.1-8b-instant", "llama3-70b-8192", "llama3-8b-8192"):
+                chosen_model = "qwen/qwen3.8-27b"
+
+            # Enforce safe token limit for Groq on-demand free tier (OTPM is 1000 for qwen models)
+            safe_tokens = min(max_tokens, 1000) if "qwen" in chosen_model.lower() else min(max_tokens, 2048)
+
             for attempt in range(max_retries):
                 try:
                     messages = []
@@ -107,9 +117,10 @@ class LLMClient:
                     messages.append({"role": "user", "content": prompt})
                     
                     resp = self.groq_client.chat.completions.create(
-                        model=model or "qwen/qwen3.6-27b",
+                        model=chosen_model,
                         messages=messages,
-                        temperature=temperature
+                        temperature=temperature,
+                        max_tokens=safe_tokens
                     )
                     content = resp.choices[0].message.content or ""
                     clean_res = self._clean_output(content)
@@ -117,15 +128,27 @@ class LLMClient:
                         return clean_res
                 except Exception as e:
                     print(f"[Groq Notice attempt {attempt+1}]: {e}")
+                    err_str = str(e).lower()
+                    if "model_decommissioned" in err_str or "decommissioned" in err_str:
+                        chosen_model = "qwen/qwen3.8-27b"
+                    elif "otpm" in err_str or "limit 1000" in err_str or "rate_limit" in err_str:
+                        # Fallback to model with larger rate limit window on retry
+                        chosen_model = "openai/gpt-oss-120b"
+                        safe_tokens = min(safe_tokens, 1024)
                     time.sleep(1)
 
         # 2. Try Gemini
         if self.gemini_client:
             try:
+                from google.genai import types
                 full_prompt = f"{system_prompt}\n\n{prompt}" if system_prompt else prompt
                 resp = self.gemini_client.models.generate_content(
                     model="gemini-2.5-flash",
-                    contents=full_prompt
+                    contents=full_prompt,
+                    config=types.GenerateContentConfig(
+                        max_output_tokens=max_tokens,
+                        temperature=temperature
+                    )
                 )
                 if resp.text:
                     return self._clean_output(resp.text.strip())
@@ -141,7 +164,8 @@ class LLMClient:
                 resp = self.openai_client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=messages,
-                    temperature=temperature
+                    temperature=temperature,
+                    max_tokens=max_tokens
                 )
                 return self._clean_output(resp.choices[0].message.content.strip())
             except Exception:
@@ -155,7 +179,8 @@ class LLMClient:
         prompt: str,
         schema_class: Type[T],
         system_prompt: Optional[str] = None,
-        model: Optional[str] = None
+        model: Optional[str] = None,
+        max_tokens: int = 2048
     ) -> T:
         schema_json = json.dumps(schema_class.model_json_schema(), indent=2)
         json_system_prompt = (
@@ -169,7 +194,8 @@ class LLMClient:
             prompt=prompt,
             system_prompt=json_system_prompt,
             model=model,
-            temperature=0.1
+            temperature=0.1,
+            max_tokens=max_tokens
         )
         
         clean_text = re.sub(r"^```(?:json)?\s*", "", raw_text.strip(), flags=re.MULTILINE)
@@ -192,8 +218,32 @@ class LLMClient:
 # Global singleton client instance
 client = LLMClient()
 
-def generate(prompt: str, system_prompt: Optional[str] = None, model: Optional[str] = None) -> str:
-    return client.generate(prompt=prompt, system_prompt=system_prompt, model=model)
+def generate(
+    prompt: str,
+    system_prompt: Optional[str] = None,
+    model: Optional[str] = None,
+    temperature: float = 0.2,
+    max_tokens: int = 4096
+) -> str:
+    return client.generate(
+        prompt=prompt,
+        system_prompt=system_prompt,
+        model=model,
+        temperature=temperature,
+        max_tokens=max_tokens
+    )
 
-def generate_json(prompt: str, schema_class: Type[T], system_prompt: Optional[str] = None, model: Optional[str] = None) -> T:
-    return client.generate_json(prompt=prompt, schema_class=schema_class, system_prompt=system_prompt, model=model)
+def generate_json(
+    prompt: str,
+    schema_class: Type[T],
+    system_prompt: Optional[str] = None,
+    model: Optional[str] = None,
+    max_tokens: int = 2048
+) -> T:
+    return client.generate_json(
+        prompt=prompt,
+        schema_class=schema_class,
+        system_prompt=system_prompt,
+        model=model,
+        max_tokens=max_tokens
+    )

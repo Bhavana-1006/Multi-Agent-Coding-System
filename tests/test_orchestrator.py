@@ -20,6 +20,7 @@ def test_sandbox_execution_failure():
 def test_env_observation_space():
     env = MultiAgentCodingEnv(max_steps=5)
     obs, info = env.reset()
-    assert obs.shape == (12,)
+    assert obs.shape == (15,)
+    assert env.observation_space.shape == (15,)
     assert isinstance(info, dict)
     assert env.action_space.n == 8

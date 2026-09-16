@@ -18,10 +18,13 @@ def test_state_vectorization():
     
     vec = state.to_feature_vector()
     assert isinstance(vec, np.ndarray)
-    assert vec.shape == (12,)
+    assert vec.shape == (15,)
     assert vec[0] == 1.0  # has_req
     assert vec[1] == 1.0  # has_plan
     assert vec[3] == 1.0  # has_code
     assert vec[5] == 0.9  # quality score
     assert vec[7] == 1.0  # tests_passed
+    assert vec[12] == 0.0  # repair_attempt_count_norm
+    assert vec[13] == 0.0  # has_syntax_error
+    assert vec[14] == 0.5  # medium difficulty norm
     assert np.all(vec >= 0.0) and np.all(vec <= 1.0)
